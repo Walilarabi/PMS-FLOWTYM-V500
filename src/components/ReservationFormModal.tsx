@@ -20,6 +20,7 @@ export interface ReservationFormData {
   adults: number;
   children: number;
   company: string;
+  reference: string;
   checkIn: string;
   checkOut: string;
   category: string;
@@ -289,6 +290,7 @@ const ReservationFormModal: React.FC<Props> = ({
     guestName: '', email: '', phone: '',
     nationality: 'FR', nationalityLabel: 'France',
     adults: 2, children: 0, company: '',
+    reference: `RES-${Math.floor(Math.random() * 9000 + 1000)}`,
     checkIn: todayISO(), checkOut: tomorrowISO(),
     category: '', roomNumber: '', board: 'Room Only',
     cancelPolicy: 'flexible', ratePlanId: '', channel: 'Direct',
@@ -444,8 +446,22 @@ const ReservationFormModal: React.FC<Props> = ({
                   </Sel>
                 </div>
 
-                {/* Chambre + Type + Pension */}
+                {/* Référence + Type chambre + Numéro */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <label style={{ fontSize: 9, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: 5 }}>
+                      <i className="fa-solid fa-hashtag" style={{ fontSize: 10, color: '#8B5CF6' }} /> Référence
+                    </label>
+                    <input
+                      type="text"
+                      value={form.reference}
+                      onChange={e => set('reference', e.target.value)}
+                      placeholder="RES-XXXX"
+                      style={{ height: 38, padding: '0 12px', borderRadius: 10, border: '1.5px solid #e2e8f0', background: '#f8fafc', fontFamily: 'monospace', fontSize: 12, fontWeight: 700, color: '#8B5CF6', outline: 'none' }}
+                      onFocus={e => { e.target.style.borderColor = '#8B5CF6'; e.target.style.background = '#fff'; }}
+                      onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.background = '#f8fafc'; }}
+                    />
+                  </div>
                   <Sel icon={<Ico d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />}
                     value={form.category} onChange={v => set('category', v)} placeholder="Type Chambre">
                     {['Simple','Double Classique','Double Deluxe','Twin','Suite','Suite Premium','Familiale'].map(t => <option key={t}>{t}</option>)}
@@ -454,14 +470,14 @@ const ReservationFormModal: React.FC<Props> = ({
                     value={form.roomNumber} onChange={v => set('roomNumber', v)} placeholder="Numéro">
                     {rooms.map(r => <option key={r.number} value={r.number}>{r.number}{r.type ? ` — ${r.type}` : ''}</option>)}
                   </Sel>
+                </div>
+
+                {/* Pension + Annulation + Plan tarifaire */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
                   <Sel icon={<Ico d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3" />}
                     value={form.board} onChange={v => set('board', v)}>
                     {['Room Only','Petit-déjeuner','Demi-pension','Pension complète'].map(b => <option key={b}>{b}</option>)}
                   </Sel>
-                </div>
-
-                {/* Annulation + Plan tarifaire */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <Sel icon={<Ico d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />}
                     value={form.cancelPolicy} onChange={v => set('cancelPolicy', v)}>
                     <option value="flexible">Flexible (72h)</option>

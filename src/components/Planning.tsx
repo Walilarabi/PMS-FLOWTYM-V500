@@ -699,8 +699,19 @@ export const Planning: React.FC<PlanningProps> = ({
                key={d}
                data-view={d === 7 ? 'week' : d === 15 ? '15days' : 'month'}
                disabled={viewType === 'calendar'}
-               onClick={() => setViewDays(d)}
-               className={`px-4 py-1.5 rounded-lg text-[9px] font-black capitalize tracking-widest transition-all ${viewDays === d ? 'bg-white text-primary shadow-sm' : 'text-slate-400 hover:text-slate-600'} ${viewType === 'calendar' ? 'opacity-50 cursor-not-allowed' : ''}`}
+               onClick={() => {
+                 if (d === 30) {
+                   // Vue Mois : repositionner au 1er du mois + jours réels
+                   const now = baseDate;
+                   const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+                   setBaseDate(firstOfMonth);
+                   setViewDays(daysInMonth);
+                 } else {
+                   setViewDays(d);
+                 }
+               }}
+               className={`px-4 py-1.5 rounded-lg text-[9px] font-black capitalize tracking-widest transition-all ${(d === 30 ? viewDays >= 28 : viewDays === d) ? 'bg-white text-primary shadow-sm' : 'text-slate-400 hover:text-slate-600'} ${viewType === 'calendar' ? 'opacity-50 cursor-not-allowed' : ''}`}
              >
                {d === 7 ? 'Semaine' : d === 15 ? '15J' : 'Mois'}
              </button>
@@ -1225,7 +1236,7 @@ export const Planning: React.FC<PlanningProps> = ({
                                      className="text-[9px] font-black truncate"
                                      style={{ color: style.color }}
                                    >
-                                     {clients.find(c => c.id === startingResa.clientId)?.name || 'Guest'}
+                                   {clients.find(c => c.id === startingResa.clientId)?.name || startingResa.guestName || 'Client inconnu'}
                                    </span>
                                 </div>
                                 <span 

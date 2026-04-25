@@ -151,41 +151,38 @@ export const ReservationDetailPanel: React.FC<ReservationDetailPanelProps> = ({
         }
       } catch (error) {
         console.error('Error fetching reservation from Supabase:', error);
-        // Fallback to mock data if table doesn't exist or query fails
+        // Fallback : chercher dans le store Zustand via window (réservations en mémoire)
+        const storeResas: any[] = (window as any).__flowtymReservations || [];
+        const storeResa = storeResas.find((r: any) => r.id === reservationId);
+
         const mockData: ReservationDetailData = {
           id: reservationId,
-          room: "101",
-          roomType: "Double Classique",
-          clientName: "PIERRE BERNARD",
-          email: "pierre.bernard@orange.fr",
-          phone: "+33 6 12 34 56 78",
-          ville: "Paris",
-          societe: "Orange S.A.",
-          isVip: true,
-          clv: 4250,
-          sejours: 12,
-          status: "En séjour",
-          pension: "Petit-déjeuner inclus",
-          canal: "Direct",
-          pricePerNight: 120,
-          nights: 3,
-          totalTtc: 400.50,
-          paymentStatus: "Partiel",
-          preferences: ["Étage élevé", "Lit double", "Sans gluten"],
-          notes: "Client fidèle. Préfère les chambres calmes loin de l'ascenseur.",
-          transactions: [
-            { date: "15 Avr. 2024", description: "Acompte réservation", amount: 150.00 },
-          ],
-          history: [
-            { dates: "12 Déc. – 15 Déc. 2023", room: "105", status: "Terminé", amount: 360 },
-            { dates: "05 Juil. – 08 Juil. 2023", room: "201", status: "Terminé", amount: 420 }
-          ],
+          room: storeResa?.room || storeResa?.roomNumber || '—',
+          roomType: storeResa?.roomType || 'Double Classique',
+          clientName: (storeResa?.guestName || 'Client').replace(/\$/g, ''),
+          email: (storeResa?.email || storeResa?.guest_email || '').replace(/\$/g, ''),
+          phone: (storeResa?.phone || '').replace(/\$/g, ''),
+          ville: storeResa?.city || '',
+          societe: storeResa?.company || '',
+          isVip: false,
+          clv: 0,
+          sejours: 1,
+          status: storeResa?.status || 'confirmed',
+          pension: storeResa?.board || 'Hébergement seul',
+          canal: storeResa?.canal || storeResa?.source || 'Direct',
+          pricePerNight: storeResa ? (storeResa.montant || 0) / Math.max(storeResa.nights || 1, 1) : 0,
+          nights: storeResa?.nights || 1,
+          totalTtc: storeResa?.montant || storeResa?.total_amount || 0,
+          paymentStatus: storeResa?.paymentStatus || storeResa?.payment_status || 'En attente',
+          preferences: storeResa?.preferences || [],
+          notes: storeResa?.notes || '',
+          transactions: [],
+          history: [],
           incidents: [],
           lostItems: [],
           reviews: {
-            rating: 4.5,
-            comment: "Excellent séjour comme d'habitude. Personnel aux petits soins.",
-            response: "Toute l'équipe vous remercie pour votre fidélité, M. Bernard !"
+            rating: 5,
+            comment: "Pas encore d'avis."
           }
         };
         setReservation(mockData);

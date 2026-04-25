@@ -882,37 +882,37 @@ export const Reservations: React.FC<ReservationsProps> = ({
                       >
                         {/* Référence */}
                         <td className="px-3 py-1.5">
-                          <span className="font-mono font-black text-primary text-[10px]">{r.id}</span>
+                          <span className="font-mono font-black text-primary text-[11px]">{r.id}</span>
                         </td>
                         {/* Statut */}
                         <td className="px-3 py-1.5 text-center">{statusBadge()}</td>
                         {/* 1. Client — sans le canal (doublon supprimé) */}
                         <td className="px-3 py-1.5">
-                          <div className="font-black text-slate-800 text-[11px] leading-none">{displayName}</div>
+                          <div className="font-black text-slate-800 text-[12px] leading-none">{displayName}</div>
                         </td>
                         {/* 5. Nombre de personnes */}
                         <td className="px-3 py-1.5 text-center">
-                          <span className="inline-flex items-center gap-0.5 text-[10px] font-black text-slate-600">
+                          <span className="inline-flex items-center gap-0.5 text-[11px] font-black text-slate-600">
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-400"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                             {r.pax || r.adults || 2}
                           </span>
                         </td>
                         {/* Check-in */}
                         <td className="px-3 py-1.5">
-                          <span className="text-[10px] font-bold text-slate-600">{fmtDate(r.checkin)}</span>
+                          <span className="text-[11px] font-bold text-slate-600">{fmtDate(r.checkin)}</span>
                         </td>
                         {/* Check-out */}
                         <td className="px-3 py-1.5">
-                          <span className="text-[10px] font-bold text-slate-600">{fmtDate(r.checkout)}</span>
+                          <span className="text-[11px] font-bold text-slate-600">{fmtDate(r.checkout)}</span>
                         </td>
                         {/* Nuitées */}
                         <td className="px-3 py-1.5 text-center">
-                          <span className="text-[10px] font-black text-slate-700">{r.nights}</span>
+                          <span className="text-[11px] font-black text-slate-700">{r.nights}</span>
                         </td>
                         {/* Montant + badge paiement */}
                         <td className="px-3 py-1.5 text-right">
                           <div className="flex items-center justify-end gap-0.5">
-                            <span className="font-black text-slate-900 text-[11px]">{r.montant.toFixed(2)} €</span>
+                            <span className="font-black text-slate-900 text-[12px]">{r.montant.toFixed(2)} €</span>
                             {payBadge()}
                           </div>
                           {r.solde > 0 && (
@@ -942,7 +942,7 @@ export const Reservations: React.FC<ReservationsProps> = ({
                         </td>
                         {/* 4. Chambre — format Numéro + Typologie + Catégorie */}
                         <td className="px-3 py-1.5">
-                          <div className="text-[11px] font-black text-slate-800 whitespace-nowrap">
+                          <div className="text-[12px] font-black text-slate-800 whitespace-nowrap">
                             {r.room}
                             {r.roomType && <span className="text-slate-500 font-bold"> – {r.roomType}{r.roomCategory ? ` ${r.roomCategory}` : ''}</span>}
                           </div>

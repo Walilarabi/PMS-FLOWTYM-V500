@@ -389,6 +389,9 @@ export default function App() {
   // ── activeReservations : Supabase prioritaire, sinon le store Zustand (mis à jour en temps réel) ──
   const activeReservations = dbReservations.length > 0 ? dbReservations : storeReservations;
 
+  // Exposer les réservations sur window pour le fallback du ReservationDetailPanel
+  (window as any).__flowtymReservations = activeReservations;
+
   const activeClients = dbClients.length > 0 ? dbClients : INITIAL_CLIENTS;
 
   // ── Sync Supabase → store Zustand (quand Supabase est configuré et retourne des données) ──
