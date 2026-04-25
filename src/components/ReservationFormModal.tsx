@@ -21,6 +21,7 @@ export interface ReservationFormData {
   children: number;
   company: string;
   reference: string;
+  segment: string;
   checkIn: string;
   checkOut: string;
   category: string;
@@ -72,6 +73,27 @@ const ROOMS_DEFAULT: AvailableRoom[] = [
   { number: '203', type: 'Suite Panoramique', price: 249 },
   { number: '301', type: 'Familiale', price: 185 },
   { number: '302', type: 'Junior Suite', price: 165 },
+];
+
+// Indicatifs téléphoniques par pays (ISO 2 lettres)
+const COUNTRY_DIAL: Record<string, string> = {
+  FR: '+33', BE: '+32', CH: '+41', CA: '+1', US: '+1',
+  GB: '+44', DE: '+49', ES: '+34', IT: '+39', PT: '+351',
+  NL: '+31', LU: '+352', MA: '+212', DZ: '+213', TN: '+216',
+  SA: '+966', AE: '+971', QA: '+974', CN: '+86', JP: '+81',
+  IN: '+91', BR: '+55', MX: '+52', AU: '+61', RU: '+7',
+};
+
+// Segments client
+const SEGMENTS = [
+  { value: 'Loisir',    icon: '🌴', label: 'Loisir' },
+  { value: 'Business',  icon: '💼', label: 'Business' },
+  { value: 'Corpo',     icon: '🏢', label: 'Corpo' },
+  { value: 'Groupe',    icon: '👥', label: 'Groupe' },
+  { value: 'Agence',    icon: '🏛️', label: 'Agence' },
+  { value: 'TO',        icon: '✈️', label: 'Tour Opérator' },
+  { value: 'Famille',   icon: '👨‍👩‍👧', label: 'Famille' },
+  { value: 'VIP',       icon: '👑', label: 'VIP' },
 ];
 
 const RATE_PLANS = [
@@ -291,6 +313,7 @@ const ReservationFormModal: React.FC<Props> = ({
     nationality: 'FR', nationalityLabel: 'France',
     adults: 2, children: 0, company: '',
     reference: `RES-${Math.floor(Math.random() * 9000 + 1000)}`,
+    segment: 'Loisir',
     checkIn: todayISO(), checkOut: tomorrowISO(),
     category: '', roomNumber: '', board: 'Room Only',
     cancelPolicy: 'flexible', ratePlanId: '', channel: 'Direct',
@@ -357,8 +380,99 @@ const ReservationFormModal: React.FC<Props> = ({
 
   const handleSave = () => {
     if (!form.guestName.trim()) { setNameErr(true); return; }
-    onSave({ ...form, guaranteeStatus: guarStatus, preauthAmount: paAmount, nights: calc.nights, totalTTC: calc.ttc });
+    const savedData = { ...form, guaranteeStatus: guarStatus, preauthAmount: paAmount, nights: calc.nights, totalTTC: calc.ttc };
+    onSave(savedData);
+    // Envoi automatique confirmation si coché
+    if (form.sendConfirmation && form.email) {
+      setTimeout(() => handleSendEmail(savedData), 300);
+    }
     onClose();
+  };
+
+  // Générer le lien de paiement (simulation)
+  const generatePaymentLink = (data: typeof form) => {
+    const ref = data.reference || `RES-${Date.now()}`;
+    const amount = calc.ttc;
+    return `https://pay.flowtym.com/stripe/${ref}?amount=${amount.toFixed(2)}`;
+  };
+
+  // Générer et imprimer la proforma PDF
+  const handleProforma = () => {
+    if (!form.guestName.trim()) { setNameErr(true); return; }
+    const link = generatePaymentLink(form);
+    const pfNum = `PF-${form.reference}-${new Date().getFullYear()}`;
+    const htTotal = (calc.ttc / 1.1).toFixed(2);
+    const tvaTotal = (calc.ttc - calc.ttc / 1.1).toFixed(2);
+    const fmtD = (iso: string) => iso ? new Date(iso).toLocaleDateString('fr-FR') : '—';
+    const win = window.open('', '_blank');
+    if (!win) return;
+    win.document.write(`<!DOCTYPE html><html><head><title>Proforma ${pfNum}</title>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+      <style>body{font-family:Inter,sans-serif;padding:40px;color:#1e293b;max-width:800px;margin:0 auto}
+      h1{color:#8B5CF6;font-size:28px;font-weight:800;margin:0}
+      .badge{background:#EDE9FE;color:#6D28D9;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700}
+      table{width:100%;border-collapse:collapse;font-size:12px;margin:16px 0}
+      th{background:#f1f5f9;padding:10px;text-align:left;font-weight:700}td{padding:10px;border-bottom:1px solid #f1f5f9}
+      .total{background:#EDE9FE;padding:10px 14px;border-radius:10px;text-align:right}
+      .link-box{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:12px;font-size:11px;color:#166534;word-break:break-all}
+      @media print{@page{margin:15mm}}</style>
+      </head><body>
+      <div style="display:flex;justify-content:space-between;margin-bottom:28px;align-items:flex-start">
+        <div><h1>FLOWTYM PMS</h1><p style="color:#64748b;font-size:12px;margin:4px 0">Mas Provencal Aix — 13100 Aix-en-Provence</p></div>
+        <div style="text-align:right"><div style="font-size:18px;font-weight:800;color:#8B5CF6">${pfNum}</div>
+        <span class="badge">PROFORMA</span>
+        <div style="font-size:11px;color:#64748b;margin-top:4px">Émise le ${new Date().toLocaleDateString('fr-FR')}</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+        <div style="background:#f8fafc;padding:16px;border-radius:12px;border:1px solid #e2e8f0">
+          <div style="font-size:9px;font-weight:700;color:#8B5CF6;text-transform:uppercase;margin-bottom:8px">CLIENT</div>
+          <div style="font-size:15px;font-weight:700">${form.guestName}</div>
+          ${form.email ? `<div style="font-size:11px;color:#64748b">${form.email}</div>` : ''}
+          ${form.phone ? `<div style="font-size:11px;color:#64748b">${form.phone}</div>` : ''}
+        </div>
+        <div style="background:#f8fafc;padding:16px;border-radius:12px;border:1px solid #e2e8f0">
+          <div style="font-size:9px;font-weight:700;color:#8B5CF6;text-transform:uppercase;margin-bottom:8px">SÉJOUR</div>
+          <table style="margin:0"><tbody>
+            <tr><td style="border:none;padding:3px 0;font-size:11px;color:#64748b">Arrivée</td><td style="border:none;padding:3px 0;font-size:11px;font-weight:700">${fmtD(form.checkIn)}</td></tr>
+            <tr><td style="border:none;padding:3px 0;font-size:11px;color:#64748b">Départ</td><td style="border:none;padding:3px 0;font-size:11px;font-weight:700">${fmtD(form.checkOut)}</td></tr>
+            <tr><td style="border:none;padding:3px 0;font-size:11px;color:#64748b">Chambre</td><td style="border:none;padding:3px 0;font-size:11px;font-weight:700">${form.roomNumber || '—'}</td></tr>
+            <tr><td style="border:none;padding:3px 0;font-size:11px;color:#64748b">Personnes</td><td style="border:none;padding:3px 0;font-size:11px;font-weight:700">${form.adults + form.children}</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <table><thead><tr><th>Description</th><th>HT</th><th>TVA 10%</th><th>TTC</th></tr></thead>
+      <tbody><tr><td>Hébergement — ${form.roomNumber || 'Ch. ?'} (${calc.nights} nuit${calc.nights > 1 ? 's' : ''})</td>
+        <td>${htTotal} €</td><td>${tvaTotal} €</td><td style="font-weight:700">${calc.ttc.toFixed(2)} €</td></tr></tbody></table>
+      <div class="total"><span style="font-size:11px;color:#5b21b6;margin-right:8px;font-weight:700">TOTAL TTC</span>
+        <span style="color:#6d28d9;font-weight:800;font-size:18px">${calc.ttc.toFixed(2)} €</span></div>
+      ${link ? `<div style="margin-top:16px"><div style="font-size:9px;font-weight:700;color:#166534;text-transform:uppercase;margin-bottom:6px">Lien de paiement</div>
+        <div class="link-box">${link}</div></div>` : ''}
+      <div style="margin-top:28px;font-size:10px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0;padding-top:16px">
+        Flowtym PMS · Mas Provencal Aix · SIRET 000 000 000 00000 · TVA FR00 000 000 000
+      </div></body></html>`);
+    win.document.close();
+    setTimeout(() => win.print(), 500);
+  };
+
+  // Envoyer la confirmation (simulation — toast + log)
+  const handleSendEmail = (data?: typeof form) => {
+    const d = data || form;
+    if (!d.guestName.trim()) { setNameErr(true); return; }
+    const link = generatePaymentLink(d);
+    const fmtD = (iso: string) => iso ? new Date(iso).toLocaleDateString('fr-FR') : '—';
+    // Simulation : log dans console + toast
+    console.log(`[Flowtym] Email envoyé à ${d.email || '(pas d\'email)'}`, {
+      to: d.email,
+      subject: `Confirmation ${d.reference}`,
+      body: `Bonjour ${d.guestName},\n\nRéservation ${d.reference}\nArrivée : ${fmtD(d.checkIn)} → Départ : ${fmtD(d.checkOut)}\nChambre : ${d.roomNumber || '—'}\nMontant : ${calc.ttc.toFixed(2)} €\n\nLien de paiement : ${link}\n\nCordialement, L'équipe Flowtym`,
+      paymentLink: link,
+    });
+    // Toast visible
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:#1e293b;color:#fff;padding:12px 18px;border-radius:14px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:fadeIn .3s ease';
+    toast.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Email + lien de paiement envoyés à ${d.email || d.guestName}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
   };
 
   // ── Styles de base ──
@@ -406,7 +520,22 @@ const ReservationFormModal: React.FC<Props> = ({
                     {nameErr && <p style={{ fontSize: 11, color: '#EF4444', fontWeight: 600, margin: '3px 0 0 4px' }}>Champ requis</p>}
                   </div>
                   <NatSelector code={form.nationality} label={form.nationalityLabel}
-                    onChange={(c, l) => { set('nationality', c); set('nationalityLabel', l); }} />
+                    onChange={(c, l) => {
+                      set('nationality', c);
+                      set('nationalityLabel', l);
+                      // Auto-indicatif : uniquement si téléphone vide ou commence par un indicatif connu
+                      const dial = COUNTRY_DIAL[c];
+                      if (dial) {
+                        const prevDial = COUNTRY_DIAL[form.nationality];
+                        const isEmpty = !form.phone.trim();
+                        const startsWithPrev = prevDial && form.phone.trim().startsWith(prevDial);
+                        if (isEmpty) {
+                          set('phone', dial + ' ');
+                        } else if (startsWithPrev) {
+                          set('phone', form.phone.replace(prevDial, dial));
+                        }
+                      }
+                    }} />
                 </div>
 
                 {/* Email + Tel */}
@@ -614,16 +743,60 @@ const ReservationFormModal: React.FC<Props> = ({
                   </div>
                 </div>
 
+                {/* SEGMENT CLIENT */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 0 }}>
+                  <Sel
+                    icon={
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" strokeWidth="1.8">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                      </svg>
+                    }
+                    value={form.segment}
+                    onChange={v => set('segment', v)}
+                    placeholder="Segment client"
+                  >
+                    {SEGMENTS.map(s => (
+                      <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
+                    ))}
+                  </Sel>
+                </div>
+
                 {/* BOTTOM ACTIONS */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 16, borderTop: '1px solid #F3F4F6', flexWrap: 'wrap', gap: 10 }}>
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                    <button title="Générer le proforma PDF" style={{ width: 42, height: 42, borderRadius: 12, border: '1.5px solid #EDE9FE', background: '#F5F3FF', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="1.5"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                    {/* Proforma PDF */}
+                    <button
+                      onClick={handleProforma}
+                      title="Générer la facture proforma PDF"
+                      style={{ width: 42, height: 42, borderRadius: 12, border: '1.5px solid #FECDD3', background: '#FFF1F2', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all .15s' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#FFE4E6'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#FFF1F2'; }}
+                    >
+                      {/* Icône PDF épurée */}
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#E11D48" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <path d="M8 13h2.5a1.5 1.5 0 0 1 0 3H8v-3zm0 3v2"/>
+                      </svg>
                     </button>
-                    <button title="Envoyer la confirmation par email" style={{ width: 42, height: 42, borderRadius: 12, border: '1.5px solid #EDE9FE', background: '#F5F3FF', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" strokeWidth="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8l10 6 10-6"/></svg>
+
+                    {/* Envoyer email + lien paiement */}
+                    <button
+                      onClick={() => handleSendEmail()}
+                      title="Envoyer confirmation + lien de paiement"
+                      style={{ width: 42, height: 42, borderRadius: 12, border: '1.5px solid #BBF7D0', background: '#F0FDF4', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all .15s' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#DCFCE7'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#F0FDF4'; }}
+                    >
+                      {/* Icône Send épurée */}
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m22 2-7 20-4-9-9-4z"/>
+                        <path d="M22 2 11 13"/>
+                      </svg>
                     </button>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 11, color: '#9CA3AF', cursor: 'pointer' }}>
+
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 11, color: '#9CA3AF', cursor: 'pointer', userSelect: 'none' }}>
                       <input type="checkbox" checked={form.sendConfirmation} onChange={e => set('sendConfirmation', e.target.checked)} style={{ accentColor: '#8B5CF6', width: 14, height: 14 }} />
                       Envoyer confirmation
                     </label>
