@@ -89,6 +89,11 @@ const GUAR_CFG: Record<string, { color: string; bg: string; border: string; lbl:
   deposit:      { color: '#3b82f6', bg: '#EFF6FF', border: '#BFDBFE', lbl: 'Arrhes' },
   paid:         { color: '#10b981', bg: '#ECFDF5', border: '#A7F3D0', lbl: 'Payé' },
   refused:      { color: '#ef4444', bg: '#FEF2F2', border: '#FECACA', lbl: 'Refusé' },
+  // Nouveaux modes P0
+  amex:         { color: '#1A6DB5', bg: '#EFF6FF', border: '#BFDBFE', lbl: 'American Express' },
+  diners:       { color: '#2B6CB0', bg: '#EBF8FF', border: '#BEE3F8', lbl: 'Diners Club' },
+  jcb:          { color: '#E53E3E', bg: '#FFF5F5', border: '#FED7D7', lbl: 'JCB' },
+  debiteur:     { color: '#718096', bg: '#F7FAFC', border: '#E2E8F0', lbl: 'Compte débiteur' },
 };
 
 interface Country { n: string; c: string; }
@@ -265,6 +270,11 @@ const GUAR_ICONS: Record<string, React.ReactNode> = {
   especes:  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>,
   cheque:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>,
   paypal:   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z"/></svg>,
+  // Nouveaux modes P0
+  amex:     <span style={{ fontSize: 9, fontWeight: 800, color: '#1A6DB5', lineHeight: 1 }}>AX</span>,
+  diners:   <span style={{ fontSize: 9, fontWeight: 800, color: '#2B6CB0', lineHeight: 1 }}>DC</span>,
+  jcb:      <span style={{ fontSize: 9, fontWeight: 800, color: '#E53E3E', lineHeight: 1 }}>JCB</span>,
+  debiteur: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
 };
 
 // ─── COMPOSANT PRINCIPAL ─────────────────────────────────────────────────────
@@ -560,8 +570,8 @@ const ReservationFormModal: React.FC<Props> = ({
                     {/* ═══ GARANTIE ═══ */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 14px', background: '#F5F3FF', border: '1.5px solid #EDE9FE', borderRadius: 14 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                        {(['aucune','cb','virement','especes','cheque','paypal'] as const).map(type => (
-                          <button key={type} title={{ aucune:'Aucune garantie',cb:'Garantie par CB',virement:'Garantie par virement',especes:'Garantie en espèces',cheque:'Garantie par chèque',paypal:'Garantie PayPal' }[type]}
+                        {(['aucune','cb','virement','especes','cheque','paypal','amex','diners','jcb','debiteur'] as const).map(type => (
+                          <button key={type} title={{ aucune:'Aucune garantie',cb:'Garantie par CB',virement:'Garantie par virement',especes:'Garantie en espèces',cheque:'Garantie par chèque',paypal:'Garantie PayPal',amex:'American Express',diners:'Diners Club',jcb:'JCB',debiteur:'Compte débiteur' }[type]}
                             onClick={() => set('guaranteeType', type)} style={{ width: 36, height: 36, borderRadius: 10, cursor: 'pointer', transition: 'all .15s', border: `1.5px solid ${form.guaranteeType===type?'#8B5CF6':'#EDE9FE'}`, background: form.guaranteeType===type?'#EDE9FE':'#fff', color: form.guaranteeType===type?'#7C3AED':'#C4B5FD', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: form.guaranteeType===type?'0 0 0 3px rgba(139,92,246,.13)':'none' }}>
                             {GUAR_ICONS[type]}
                           </button>

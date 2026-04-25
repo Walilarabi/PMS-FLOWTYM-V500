@@ -45,7 +45,7 @@ interface Reservation {
   id: string;
   clientId: number;
   guestName?: string;
-  status: 'confirmed' | 'pending' | 'checked_in' | 'checked_out' | 'cancelled';
+  status: 'confirmed' | 'pending' | 'checked_in' | 'checked_out' | 'cancelled' | 'no_show';
   dates: string;
   nights: number;
   room: string;
@@ -407,6 +407,7 @@ export const Reservations: React.FC<ReservationsProps> = ({
     switch (status) {
       case 'cancelled': return <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-rose-100 text-rose-600 uppercase tracking-wider">Annulée</span>;
       case 'checked_in': return <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-100 text-amber-600 uppercase tracking-wider">Checkin</span>;
+      case 'no_show': return <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-slate-800 text-white uppercase tracking-wider">No-Show</span>;
       case 'paid': return <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-100 text-emerald-600 uppercase tracking-wider">Payé</span>;
       default: return <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-primary/10 text-primary uppercase tracking-wider">Confirmée</span>;
     }
@@ -854,6 +855,7 @@ export const Reservations: React.FC<ReservationsProps> = ({
                         cancelled:   { bg: '#fee2e2', text: '#991b1b', label: 'Annulée' },
                         checked_in:  { bg: '#dbeafe', text: '#1e40af', label: 'Check-in' },
                         checked_out: { bg: '#f1f5f9', text: '#475569', label: 'Check-out' },
+                        no_show:     { bg: '#1e293b', text: '#ffffff', label: 'No-Show' },
                       };
                       const cfg = map[r.status] || { bg: '#f1f5f9', text: '#64748b', label: r.status };
                       return (

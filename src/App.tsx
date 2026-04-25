@@ -47,6 +47,8 @@ import { supabase, isSupabaseConfigured } from './lib/supabase';
 import { Login } from './components/Login';
 import { useSupabaseData } from './hooks/useSupabaseData';
 import { useReservationStore, type Reservation as StoreReservation } from './store/reservationStore';
+import ConformiteFiscale from './components/ConformiteFiscale';
+import Prestations from './components/Prestations';
 
 // ==================== UI HELPERS ====================
 const toast = (msg: string) => {
@@ -358,6 +360,7 @@ export default function App() {
   const [modalTitle, setModalTitle] = useState('');
   const [selectedHotel, setSelectedHotel] = useState('Mas Provencal Aix');
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [showAlertes, setShowAlertes] = useState(false);
 
   // Global Toast Listener
   useEffect(() => {
@@ -782,6 +785,7 @@ export default function App() {
       id: 'revenue', label: 'Revenue', icon: 'fa-chart-line', color: '#F59E0B',
       tabs: [
         { id: 'tarifs',        label: 'Tarifs',        icon: 'fa-tags'         },
+        { id: 'prestations',   label: 'Prestations',   icon: 'fa-utensils'     },
       ]
     },
     {
@@ -800,6 +804,12 @@ export default function App() {
         { id: 'cloture',       label: 'Clôture',       icon: 'fa-lock'         },
         { id: 'finance_caisse',label: 'Caisse',         icon: 'fa-cash-register'},
         { id: 'finance_debt',  label: 'Impayés',        icon: 'fa-exclamation-circle' },
+      ]
+    },
+    {
+      id: 'conformite', label: 'Conformité', icon: 'fa-shield-check', color: '#6366F1',
+      tabs: [
+        { id: 'conformite_fiscale', label: 'Fiscalité', icon: 'fa-shield-check' },
       ]
     },
     {
@@ -980,6 +990,20 @@ export default function App() {
                 <Configuration />
               </>
             );
+          case 'prestations':
+            return (
+              <>
+                <ModuleHeader label="Prestations & Consommations" icon="fa-utensils" />
+                <Prestations reservations={activeReservations} clients={activeClients} />
+              </>
+            );
+          case 'conformite_fiscale':
+            return (
+              <>
+                <ModuleHeader label="Conformité Fiscale" icon="fa-shield-check" />
+                <ConformiteFiscale />
+              </>
+            );
           case 'operations_hk': return <><ModuleHeader label="Ménage" icon="fa-broom" /><Housekeeping rooms={activeRooms} /></>;
           case 'operations_maint': return <><ModuleHeader label="Maintenance" icon="fa-wrench" /><Maintenance /></>;
           case 'operations_staff': return <><ModuleHeader label="Personnel" icon="fa-hard-hat" /><Staff /></>;
@@ -1061,13 +1085,79 @@ export default function App() {
             <span className="text-[10px] font-black text-white tracking-widest">Connecté Api</span>
           </div>
           
-          <button 
-            onClick={() => addToast("Centre de notifications v2.3 — Aucune alerte critique.")}
-            className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all"
-          >
-            <Bell className="w-5 h-5" />
-            <div className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-primary" />
-          </button>
+          {/* ─── CENTRE ALERTES ─── */}
+          {(() => {
+            const today = new Date().toISOString().split('T')[0];
+            const alertes = [
+              ...activeReservations.filter(r => r.checkin === today && r.status === 'confirmed').map(r => ({ type: 'arrival', msg: `Arrivée attendue — Ch.${r.room} (${r.guestName || 'Client'})`, icon: 'fa-plane-arrival', color: '#8B5CF6' })),
+              ...activeReservations.filter(r => r.checkout === today && r.status === 'checked_in').map(r => ({ type: 'departure', msg: `Départ prévu — Ch.${r.room} (${r.guestName || 'Client'})`, icon: 'fa-plane-departure', color: '#10B981' })),
+              ...activeReservations.filter(r => r.solde > 0 && r.status !== 'cancelled').slice(0, 2).map(r => ({ type: 'payment', msg: `Solde impayé — ${r.id} : ${r.solde} €`, icon: 'fa-circle-exclamation', color: '#EF4444' })),
+            ];
+            const count = alertes.length;
+            return (
+              <div className="relative">
+                <button
+                  onClick={() => setShowAlertes(!showAlertes)}
+                  className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all"
+                >
+                  <Bell className="w-5 h-5" />
+                  {count > 0 && (
+                    <div className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-rose-500 rounded-full border-2 border-primary flex items-center justify-center">
+                      <span className="text-[9px] font-black text-white leading-none px-0.5">{count > 9 ? '9+' : count}</span>
+                    </div>
+                  )}
+                </button>
+                <AnimatePresence>
+                  {showAlertes && (
+                    <>
+                      <div className="fixed inset-0 z-[150]" onClick={() => setShowAlertes(false)} />
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute top-full right-0 mt-3 w-80 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-[200]"
+                      >
+                        <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between">
+                          <div>
+                            <span className="text-[11px] font-black text-slate-800 uppercase tracking-widest">Centre d'alertes</span>
+                            {count > 0 && <span className="ml-2 bg-rose-100 text-rose-600 text-[9px] font-black px-2 py-0.5 rounded-full">{count} active{count > 1 ? 's' : ''}</span>}
+                          </div>
+                          <button onClick={() => setShowAlertes(false)} className="text-slate-400 hover:text-slate-600 transition-colors"><X className="w-4 h-4" /></button>
+                        </div>
+                        <div className="max-h-72 overflow-y-auto divide-y divide-slate-50">
+                          {alertes.length === 0 ? (
+                            <div className="py-10 text-center text-slate-400 text-[11px] font-bold">
+                              <Bell className="w-8 h-8 mx-auto mb-2 opacity-20" />
+                              Aucune alerte active
+                            </div>
+                          ) : alertes.map((a, i) => (
+                            <div key={i} className="px-5 py-3 hover:bg-slate-50 flex items-start gap-3 transition-colors cursor-pointer">
+                              <div className="w-7 h-7 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: a.color + '20' }}>
+                                <i className={`fa-solid ${a.icon} text-[11px]`} style={{ color: a.color }} />
+                              </div>
+                              <div>
+                                <div className="text-[11px] font-bold text-slate-700 leading-snug">{a.msg}</div>
+                                <div className="text-[9px] text-slate-400 mt-0.5 font-bold uppercase tracking-widest">Aujourd'hui</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        {alertes.length > 0 && (
+                          <div className="px-5 py-3 border-t border-slate-50">
+                            <button onClick={() => { setShowAlertes(false); setActiveTab('flowboard'); }}
+                              className="w-full text-center text-[10px] font-black text-primary hover:text-violet-800 uppercase tracking-widest transition-colors">
+                              Voir le Flowboard →
+                            </button>
+                          </div>
+                        )}
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })()}
 
           <div className="relative">
             <div 

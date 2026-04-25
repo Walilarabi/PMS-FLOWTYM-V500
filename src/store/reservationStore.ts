@@ -10,7 +10,7 @@ export interface Reservation {
   id: string;
   clientId?: number;
   guestName?: string;
-  status: 'confirmed' | 'pending' | 'checked_in' | 'checked_out' | 'cancelled';
+  status: 'confirmed' | 'pending' | 'checked_in' | 'checked_out' | 'cancelled' | 'no_show';
   dates: string;
   nights: number;
   room: string;
