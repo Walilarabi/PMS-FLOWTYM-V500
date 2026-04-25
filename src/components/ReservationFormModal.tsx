@@ -448,19 +448,9 @@ const ReservationFormModal: React.FC<Props> = ({
 
                 {/* Référence + Type chambre + Numéro */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                    <label style={{ fontSize: 9, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: 5 }}>
-                      <i className="fa-solid fa-hashtag" style={{ fontSize: 10, color: '#8B5CF6' }} /> Référence
-                    </label>
-                    <input
-                      type="text"
-                      value={form.reference}
-                      onChange={e => set('reference', e.target.value)}
-                      placeholder="RES-XXXX"
-                      style={{ height: 38, padding: '0 12px', borderRadius: 10, border: '1.5px solid #e2e8f0', background: '#f8fafc', fontFamily: 'monospace', fontSize: 12, fontWeight: 700, color: '#8B5CF6', outline: 'none' }}
-                      onFocus={e => { e.target.style.borderColor = '#8B5CF6'; e.target.style.background = '#fff'; }}
-                      onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.background = '#f8fafc'; }}
-                    />
+                  <div style={F}>
+                    <Ico d="M9 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3m-1-4H9a1 1 0 0 0-1 1v4h8V4a1 1 0 0 0-1-1z" />
+                    <input style={{ ...inp, color: '#7C3AED', fontWeight: 700, fontFamily: 'monospace' }} type="text" placeholder="Référence" value={form.reference} onChange={e => set('reference', e.target.value)} />
                   </div>
                   <Sel icon={<Ico d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />}
                     value={form.category} onChange={v => set('category', v)} placeholder="Type Chambre">
