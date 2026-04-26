@@ -239,13 +239,15 @@ export const RMSTableau: React.FC = () => {
   // ─── Cellule générique ─────────────────────────────────────────────────────
   const Cell: React.FC<{ i: number; children: React.ReactNode; bg?: string }> = ({ i, children, bg }) => (
     <td style={{
-      padding: '8px 6px', textAlign: 'center', verticalAlign: 'middle',
+      padding: '0', textAlign: 'center', verticalAlign: 'middle',
       borderRight: '1px solid #F1F5F9',
       background: highlightCol === i ? '#F5F3FF' : (bg ?? 'white'),
       transition: 'background .15s',
-      fontSize: 12,
+      fontSize: 12, width: 90, maxWidth: 90, minWidth: 90, height: 52,
     }}>
-      {children}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', padding: '4px 6px' }}>
+        {children}
+      </div>
     </td>
   );
 
@@ -253,11 +255,12 @@ export const RMSTableau: React.FC = () => {
   const RowLabel: React.FC<{ icon: string; label: string; locked?: boolean; sub?: string }> = ({ icon, label, locked, sub }) => (
     <td style={{
       position: 'sticky', left: 0, zIndex: 2, background: 'white',
-      borderRight: '2px solid #E2E8F0', padding: '8px 14px',
-      minWidth: 200, maxWidth: 220, whiteSpace: 'nowrap',
+      borderRight: '2px solid #E2E8F0', padding: '9px 16px',
+      minWidth: 210, maxWidth: 230, whiteSpace: 'nowrap',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-        <span style={{ fontSize: 14 }}>{icon}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ display: 'flex', alignItems: 'center', color: '#94A3B8', flexShrink: 0 }}
+          dangerouslySetInnerHTML={{ __html: icon }} />
         <div>
           <div style={{ fontSize: 12, fontWeight: 600, color: '#334155' }}>{label}</div>
           {sub && <div style={{ fontSize: 10, color: '#94A3B8' }}>{sub}</div>}
@@ -319,16 +322,32 @@ export const RMSTableau: React.FC = () => {
             ))}
           </div>
           <button
+            onClick={() => { window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Pull D-Edge · Données compset actualisées' } })); }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 12, border: '1px solid #E2E8F0', background: 'white', fontSize: 12, fontWeight: 600, color: '#475569', cursor: 'pointer' }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+            Pull D-Edge
+          </button>
+          <button
+            onClick={() => { window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Export Excel · Tableau RMS téléchargé' } })); }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 12, border: '1px solid #BBF7D0', background: '#F0FDF4', fontSize: 12, fontWeight: 600, color: '#166534', cursor: 'pointer' }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13l2.5 4M13 13l-2.5 4M8 17h5"/></svg>
+            Export Excel
+          </button>
+          <button
             onClick={handleRefresh}
             style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 12, border: '1px solid #E2E8F0', background: 'white', fontSize: 12, fontWeight: 600, color: '#475569', cursor: 'pointer' }}
           >
-            <RefreshCw size={13} /> Recalculer
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Recalculer
           </button>
           <button
             onClick={handleApplyRules}
             style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', borderRadius: 12, border: 'none', background: 'linear-gradient(135deg,#8B5CF6,#6D28D9)', color: 'white', fontSize: 12, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 12px rgba(139,92,246,0.3)' }}
           >
-            <Settings size={13} /> Appliquer les règles
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M21 12a9 9 0 0 1-9 9"/></svg>
+            Appliquer les règles
           </button>
         </div>
       </div>
@@ -359,7 +378,7 @@ export const RMSTableau: React.FC = () => {
             {/* ══ ÉVÉNEMENT ══ */}
             {!collapsed['compset'] && (
               <tr style={{ background: '#FAFBFF' }}>
-                <RowLabel icon="📅" label="Événement" sub="Calendrier local" />
+                <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`} label="Événement" sub="Calendrier local" />
                 {rawData.map((d, i) => (
                   <Cell key={i} i={i} bg="#FAFBFF">
                     <span style={{
@@ -378,7 +397,7 @@ export const RMSTableau: React.FC = () => {
             {!collapsed['compset'] && (
               <>
                 <tr>
-                  <RowLabel icon="💰" label="Tarif actuel" locked sub="Prix hôtel ce jour" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`} label="Tarif actuel" locked sub="Prix hôtel ce jour" />
                   {rawData.map((d, i) => (
                     <Cell key={i} i={i}>
                       <span style={{ fontSize: 13, fontWeight: 700, color: '#1E293B' }}>{d.currentPrice} €</span>
@@ -386,7 +405,7 @@ export const RMSTableau: React.FC = () => {
                   ))}
                 </tr>
                 <tr>
-                  <RowLabel icon="📉" label="Min compset" locked sub="Concurrent le + bas" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>`} label="Min compset" locked sub="Concurrent le + bas" />
                   {rawData.map((d, i) => (
                     <Cell key={i} i={i}>
                       <span style={{ fontSize: 12, color: '#DC2626', fontWeight: 600 }}>{d.minCompset} €</span>
@@ -394,7 +413,7 @@ export const RMSTableau: React.FC = () => {
                   ))}
                 </tr>
                 <tr>
-                  <RowLabel icon="📊" label="Médiane compset" locked sub="Prix marché central" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`} label="Médiane compset" locked sub="Prix marché central" />
                   {rawData.map((d, i) => (
                     <Cell key={i} i={i} bg="#FAFBFF">
                       <span style={{ fontSize: 13, fontWeight: 700, color: '#7C3AED' }}>{d.medianCompset} €</span>
@@ -402,7 +421,7 @@ export const RMSTableau: React.FC = () => {
                   ))}
                 </tr>
                 <tr>
-                  <RowLabel icon="📈" label="Max compset" locked sub="Concurrent le + haut" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`} label="Max compset" locked sub="Concurrent le + haut" />
                   {rawData.map((d, i) => (
                     <Cell key={i} i={i}>
                       <span style={{ fontSize: 12, color: '#059669', fontWeight: 600 }}>{d.maxCompset} €</span>
@@ -417,7 +436,7 @@ export const RMSTableau: React.FC = () => {
             {!collapsed['signaux'] && (
               <>
                 <tr>
-                  <RowLabel icon="🔄" label="Pickup vs N-1" sub="Rythme de réservation" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`} label="Pickup vs N-1" sub="Rythme de réservation" />
                   {rawData.map((d, i) => (
                     <Cell key={i} i={i}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
@@ -433,7 +452,7 @@ export const RMSTableau: React.FC = () => {
                   ))}
                 </tr>
                 <tr>
-                  <RowLabel icon="⏱️" label="Lead time" sub="Jours avant arrivée" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`} label="Lead time" sub="Jours avant arrivée" />
                   {rawData.map((d, i) => (
                     <Cell key={i} i={i} bg="#FAFBFF">
                       <span style={{ fontSize: 12, fontWeight: 600, color: d.leadTime <= 2 ? '#DC2626' : d.leadTime > 20 ? '#059669' : '#475569' }}>
@@ -443,7 +462,7 @@ export const RMSTableau: React.FC = () => {
                   ))}
                 </tr>
                 <tr>
-                  <RowLabel icon="🏨" label="Occupation" sub="Taux de remplissage" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`} label="Occupation" sub="Taux de remplissage" />
                   {rawData.map((d, i) => (
                     <Cell key={i} i={i}>
                       <div style={{ display: 'flex', align: 'center', justifyContent: 'center', flexDirection: 'column', gap: 2 }}>
@@ -456,7 +475,7 @@ export const RMSTableau: React.FC = () => {
                   ))}
                 </tr>
                 <tr>
-                  <RowLabel icon="📊" label="Pression marché" locked sub="Source scraping / RMS" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`} label="Pression marché" locked sub="Source scraping / RMS" />
                   {rawData.map((d, i) => (
                     <Cell key={i} i={i} bg="#FAFBFF">
                       <span style={{ fontSize: 12, fontWeight: 700, color: d.marketPressure > 70 ? '#DC2626' : d.marketPressure > 50 ? '#D97706' : '#64748B' }}>
@@ -473,7 +492,7 @@ export const RMSTableau: React.FC = () => {
             {!collapsed['moteur'] && (
               <>
                 <tr>
-                  <RowLabel icon="🧠" label="DPS (Demand Score)" sub="Score 0→100 pondéré" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/></svg>`} label="DPS (Demand Score)" sub="Score 0→100 pondéré" />
                   {results.map((r, i) => {
                     const dps = dpsColor(r.dps);
                     return (
@@ -487,21 +506,30 @@ export const RMSTableau: React.FC = () => {
                   })}
                 </tr>
                 <tr>
-                  <RowLabel icon="⚙️" label="Règles déclenchées" sub="Moteur cumulatif" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M21 12a9 9 0 0 1-9 9"/></svg>`} label="Règles déclenchées" sub="Survol → détail" />
                   {results.map((r, i) => (
                     <Cell key={i} i={i}>
                       {r.triggeredRules.length === 0 ? (
-                        <span style={{ fontSize: 10, color: '#CBD5E1' }}>Aucune</span>
+                        <div style={{ width: 26, height: 26, borderRadius: '50%', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: '#CBD5E1', margin: 'auto' }}>0</div>
                       ) : (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, justifyContent: 'center' }}>
-                          {r.triggeredRules.map((rule, j) => (
-                            <span key={j} style={{
-                              fontSize: 9, fontWeight: 600, padding: '2px 6px', borderRadius: 100,
-                              background: '#EDE9FE', color: '#5B21B6', whiteSpace: 'nowrap',
-                            }}>
-                              {rule}
-                            </span>
-                          ))}
+                        <div style={{ position: 'relative', display: 'inline-block' }}
+                          onMouseEnter={e => { const t = e.currentTarget.querySelector('.rms-tip') as HTMLElement; if(t) t.style.display='block'; }}
+                          onMouseLeave={e => { const t = e.currentTarget.querySelector('.rms-tip') as HTMLElement; if(t) t.style.display='none'; }}
+                        >
+                          {/* Bulle */}
+                          <div style={{ width: 28, height: 28, borderRadius: '50%', cursor: 'default', background: 'linear-gradient(135deg,#8B5CF6,#6D28D9)', color: 'white', fontSize: 13, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(139,92,246,0.35)' }}>
+                            {r.triggeredRules.length}
+                          </div>
+                          {/* Tooltip */}
+                          <div className="rms-tip" style={{ display: 'none', position: 'absolute', bottom: '110%', left: '50%', transform: 'translateX(-50%)', zIndex: 999, background: '#1E293B', borderRadius: 12, padding: '10px 14px', minWidth: 230, maxWidth: 290, boxShadow: '0 8px 32px rgba(0,0,0,0.28)', border: '1px solid rgba(255,255,255,0.08)', pointerEvents: 'none' }}>
+                            <div style={{ fontSize: 9, fontWeight: 700, color: '#A78BFA', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: 7 }}>{r.triggeredRules.length} règle{r.triggeredRules.length > 1 ? 's' : ''} déclenchée{r.triggeredRules.length > 1 ? 's' : ''}</div>
+                            {r.triggeredRules.map((rule, j) => (
+                              <div key={j} style={{ fontSize: 11, color: '#E2E8F0', fontWeight: 500, padding: '4px 0', borderBottom: j < r.triggeredRules.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none', display: 'flex', alignItems: 'center', gap: 7 }}>
+                                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#A78BFA', flexShrink: 0, display: 'inline-block' }} />
+                                {rule}
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       )}
                     </Cell>
@@ -514,7 +542,7 @@ export const RMSTableau: React.FC = () => {
             <SectionRow sec={SECTIONS[3]} />
             {!collapsed['recommandation'] && (
               <tr style={{ background: '#F0FDF4' }}>
-                <RowLabel icon="🎯" label="Tarif recommandé" sub={rulesApplied ? '✓ Règles appliquées' : '⚠ Appuyer sur Appliquer'} />
+                <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`} label="Tarif recommandé" sub={rulesApplied ? '✓ Règles appliquées' : '⚠ Appuyer sur Appliquer'} />
                 {results.map((r, i) => {
                   const v = priceVariation(r.finalPrice, rawData[i].currentPrice);
                   return (
@@ -543,7 +571,7 @@ export const RMSTableau: React.FC = () => {
             {!collapsed['restrictions'] && (
               <>
                 <tr>
-                  <RowLabel icon="🔒" label="MLOS (min nuits)" sub="DPS > 70 → 2 nuits" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`} label="MLOS (min nuits)" sub="DPS > 70 → 2 nuits" />
                   {results.map((r, i) => (
                     <Cell key={i} i={i} bg={r.mlos > 1 ? '#F5F3FF' : 'white'}>
                       <span style={{ fontSize: 12, fontWeight: r.mlos > 1 ? 700 : 400, color: r.mlos > 1 ? '#7C3AED' : '#CBD5E1' }}>
@@ -553,7 +581,7 @@ export const RMSTableau: React.FC = () => {
                   ))}
                 </tr>
                 <tr>
-                  <RowLabel icon="🚪" label="CTA (fermer arrivées)" sub="Occ veille > 90%" />
+                  <RowLabel icon={`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M18 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><line x1="15" y1="12" x2="15.01" y2="12"/></svg>`} label="CTA (fermer arrivées)" sub="Occ veille > 90%" />
                   {results.map((r, i) => (
                     <Cell key={i} i={i} bg={r.ctaOn ? '#FEF2F2' : 'white'}>
                       <span style={{ fontSize: 12, fontWeight: r.ctaOn ? 700 : 400, color: r.ctaOn ? '#DC2626' : '#CBD5E1' }}>

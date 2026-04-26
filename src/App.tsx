@@ -817,9 +817,11 @@ export default function App() {
     {
       id: 'revenue', label: 'Revenue', icon: 'fa-chart-line', color: '#F59E0B',
       tabs: [
-        { id: 'tarifs',        label: 'Tarifs',               icon: 'fa-tags'         },
-        { id: 'prestations',   label: 'Prestations',          icon: 'fa-utensils'     },
-        { id: 'auto_rules',    label: 'Règles automatiques',  icon: 'fa-robot'        },
+        { id: 'tarifs',      label: 'Tarifs & Yield',       icon: 'fa-tags'         },
+        { id: 'prestations', label: 'Prestations',           icon: 'fa-utensils'     },
+        { id: 'restr',       label: 'Restrictions',          icon: 'fa-ban'          },
+        { id: 'auto_rules',  label: 'Règles automatiques',   icon: 'fa-robot'        },
+        { id: 'rms',         label: 'Tableau RMS',           icon: 'fa-table'        },
       ]
     },
     {
@@ -1000,7 +1002,21 @@ export default function App() {
             return (
               <>
                 <ModuleHeader label="Tarifs & Yield" icon="fa-tags" />
-                <Tarifs />
+                <Tarifs initialTab="rateplans" />
+              </>
+            );
+          case 'restr':
+            return (
+              <>
+                <ModuleHeader label="Restrictions tarifaires" icon="fa-ban" />
+                <Tarifs initialTab="restr" />
+              </>
+            );
+          case 'rms':
+            return (
+              <>
+                <ModuleHeader label="Tableau RMS — Pricing Engine" icon="fa-table" />
+                <Tarifs initialTab="rms" />
               </>
             );
           case 'auto_rules':
