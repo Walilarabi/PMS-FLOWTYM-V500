@@ -36,6 +36,7 @@ import { Simulations } from './components/Simulations';
 import { Rapports } from './components/Rapports';
 import { Tarifs } from './components/Tarifs';
 import { Groups } from './components/Groups';
+import { AutoRules } from './components/AutoRules';
 import { Configuration } from './components/Configuration';
 import { Cloture } from './components/Cloture';
 import { Housekeeping, Maintenance, Staff, Consignes, ObjetsTrouves, PetiteCaisse, Debiteurs } from './components/OperationsModules';
@@ -816,8 +817,9 @@ export default function App() {
     {
       id: 'revenue', label: 'Revenue', icon: 'fa-chart-line', color: '#F59E0B',
       tabs: [
-        { id: 'tarifs',        label: 'Tarifs',        icon: 'fa-tags'         },
-        { id: 'prestations',   label: 'Prestations',   icon: 'fa-utensils'     },
+        { id: 'tarifs',        label: 'Tarifs',               icon: 'fa-tags'         },
+        { id: 'prestations',   label: 'Prestations',          icon: 'fa-utensils'     },
+        { id: 'auto_rules',    label: 'Règles automatiques',  icon: 'fa-robot'        },
       ]
     },
     {
@@ -999,6 +1001,13 @@ export default function App() {
               <>
                 <ModuleHeader label="Tarifs & Yield" icon="fa-tags" />
                 <Tarifs />
+              </>
+            );
+          case 'auto_rules':
+            return (
+              <>
+                <ModuleHeader label="Règles automatiques" icon="fa-robot" />
+                <AutoRules />
               </>
             );
           case 'cloture':
