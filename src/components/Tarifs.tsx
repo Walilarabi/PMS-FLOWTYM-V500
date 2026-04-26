@@ -109,6 +109,7 @@ const FR_MONTHS = ['jan', 'fév', 'mar', 'avr', 'mai', 'jun', 'jul', 'aoû', 'se
 
 export const Tarifs: React.FC = () => {
   const [activeTab, setActiveTab] = useState('rateplans');
+  const [kpiVisible, setKpiVisible] = useState(true);
   const [ratePlans, setRatePlans] = useState<RatePlan[]>(() => {
     const saved = localStorage.getItem('flowtym_cfg_rps');
     return saved ? JSON.parse(saved) : INITIAL_RATE_PLANS;
@@ -240,35 +241,10 @@ export const Tarifs: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-20">
-      {/* ─── HEADER ─── */}
-      <div className="flex justify-between items-center bg-white p-6 rounded-[32px] border border-slate-200 shadow-sm">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-violet-50 rounded-2xl flex items-center justify-center text-violet-600 shadow-inner">
-             <Tags className="w-6 h-6" />
-          </div>
-          <div>
-            <h2 className="text-xl font-black text-slate-800 tracking-tight">Tarifs & Rate Plans</h2>
-            <div className="flex items-center gap-2 mt-0.5">
-               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-               <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">D-Edge Connecté · Sync 12:04</p>
-            </div>
-          </div>
-        </div>
-        <div className="flex gap-2">
-           <button onClick={handlePullDedge} className="bg-white border border-slate-200 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center gap-2">
-              <ArrowDown className="w-4 h-4" /> Pull D-Edge
-           </button>
-           <button onClick={() => {}} className="bg-white border border-slate-200 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center gap-2">
-              <Upload className="w-4 h-4" /> Import Excel
-           </button>
-           <button onClick={() => {}} className="bg-primary text-white px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:bg-primary-dark transition-all flex items-center gap-2">
-              <Plus className="w-4 h-4" /> Nouveau Rate Plan
-           </button>
-        </div>
-      </div>
+      {/* ─── HEADER supprimé (Point 4) ─── */}
 
       {/* ─── HUD ─── */}
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-6 gap-4">
         {[
           { l: 'Rate Plans actifs', v: ratePlans.length, d: 'sur 40 config.', c: '#8B5CF6' },
           { l: 'Mappés D-Edge', v: '38', d: '✓ 95% mappés', c: '#10b981' },
@@ -279,10 +255,27 @@ export const Tarifs: React.FC = () => {
           <div key={i} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden group">
             <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: k.c }} />
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">{k.l}</span>
-            <div className="text-xl font-black text-slate-800 mt-1">{k.v}</div>
+            <div className="text-xl font-black text-slate-800 mt-1">
+              {kpiVisible ? k.v : '••••'}
+            </div>
             <div className="text-[9px] font-bold text-slate-300 mt-1 uppercase tracking-widest">{k.d}</div>
           </div>
         ))}
+        {/* Bouton masque KPI */}
+        <button
+          onClick={() => setKpiVisible(v => !v)}
+          className="flex flex-col items-center justify-center gap-2 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-primary/30 hover:bg-violet-50 transition-all group cursor-pointer p-5"
+          title={kpiVisible ? 'Masquer les KPIs' : 'Afficher les KPIs'}
+        >
+          {kpiVisible ? (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" strokeWidth="1.8" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          ) : (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="1.8" strokeLinecap="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          )}
+          <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: kpiVisible ? '#8B5CF6' : '#94A3B8' }}>
+            {kpiVisible ? 'Masquer' : 'Afficher'}
+          </span>
+        </button>
       </div>
 
       {/* ─── TABS ─── */}
@@ -613,15 +606,6 @@ export const Tarifs: React.FC = () => {
                    <ArrowUp className="w-4 h-4" /> Synchroniser tout
                 </button>
              </div>
-          </motion.div>
-        )}
-
-        {/* ─── TAB: TABLEAU RMS ─── */}
-        {activeTab === 'rms' && (
-          <motion.div
-            key="rms" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-          >
-            <RMSTableau />
           </motion.div>
         )}
 

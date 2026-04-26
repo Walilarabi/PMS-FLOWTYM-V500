@@ -255,8 +255,8 @@ export const RMSTableau: React.FC = () => {
   const RowLabel: React.FC<{ icon: string; label: string; locked?: boolean; sub?: string }> = ({ icon, label, locked, sub }) => (
     <td style={{
       position: 'sticky', left: 0, zIndex: 2, background: 'white',
-      borderRight: '2px solid #E2E8F0', padding: '9px 16px',
-      minWidth: 210, maxWidth: 230, whiteSpace: 'nowrap',
+      borderRight: '2px solid #E2E8F0', padding: '9px 12px',
+      minWidth: 168, maxWidth: 168, width: 168, whiteSpace: 'nowrap',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={{ display: 'flex', alignItems: 'center', color: '#94A3B8', flexShrink: 0 }}
@@ -363,7 +363,7 @@ export const RMSTableau: React.FC = () => {
               <th style={{
                 position: 'sticky', left: 0, zIndex: 3,
                 background: 'linear-gradient(135deg,#1E293B,#0F172A)',
-                padding: '12px 14px', textAlign: 'left', minWidth: 200,
+                padding: '12px 12px', textAlign: 'left', minWidth: 168, width: 168,
                 borderRight: '2px solid rgba(255,255,255,0.15)',
               }}>
                 <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>Indicateur / Date</div>
