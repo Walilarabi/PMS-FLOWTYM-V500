@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { RMSTableau } from './RMSTableau';
 import { 
   Tags, 
   RefreshCw, 
@@ -290,6 +291,7 @@ export const Tarifs: React.FC = () => {
           { id: 'rateplans', label: 'Rate Plans', icon: Tags },
           { id: 'grid', label: 'Grille tarifaire', icon: LayoutGrid },
           { id: 'restr', label: 'Restrictions', icon: Lock },
+          { id: 'rms', label: 'Tableau RMS', icon: Zap },
           { id: 'mapping', label: 'Mapping Rooms', icon: LinkIcon },
           { id: 'sync', label: 'Synchronisation', icon: RefreshCw },
           { id: 'mass', label: 'Masse + Logs', icon: Zap },
@@ -611,6 +613,15 @@ export const Tarifs: React.FC = () => {
                    <ArrowUp className="w-4 h-4" /> Synchroniser tout
                 </button>
              </div>
+          </motion.div>
+        )}
+
+        {/* ─── TAB: TABLEAU RMS ─── */}
+        {activeTab === 'rms' && (
+          <motion.div
+            key="rms" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+          >
+            <RMSTableau />
           </motion.div>
         )}
 
