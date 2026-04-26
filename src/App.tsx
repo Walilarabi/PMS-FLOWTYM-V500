@@ -52,19 +52,48 @@ import Prestations from './components/Prestations';
 
 // ==================== UI HELPERS ====================
 const toast = (msg: string) => {
+  const isError = /erreur|error|échoué|failed|impossible/i.test(msg);
+  const isWarn  = /solde|impayé|attention|avertissement|alerte/i.test(msg);
+  const accent  = isError ? '#EF4444' : isWarn ? '#F59E0B' : '#10B981';
+  const iconBg  = isError ? '#FEF2F2' : isWarn ? '#FFF7ED' : '#ECFDF5';
+  const icon    = isError ? '❌'      : isWarn ? '⚠️'      : '✅';
+  const [title, ...subs] = msg.split(' · ');
+  const sub = subs.join(' · ');
+
   const t = document.createElement('div');
-  t.className = 'fixed bottom-8 right-8 bg-slate-900 text-white px-8 py-4 rounded-3xl text-[11px] font-black uppercase tracking-widest shadow-2xl z-[1000] animate-[slideIn_0.3s_ease-out] border border-white/10 backdrop-blur-md';
+  t.style.cssText = [
+    'position:fixed', 'bottom:24px', 'right:20px', 'z-index:9999',
+    'background:white', 'border-radius:16px',
+    `border-left:3px solid ${accent}`,
+    'box-shadow:0 8px 40px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.04)',
+    'padding:12px 14px', 'display:flex', 'align-items:flex-start', 'gap:12px',
+    'width:310px', 'pointer-events:auto',
+    'animation:toastIn .25s cubic-bezier(.34,1.56,.64,1)',
+    'font-family:Inter,system-ui,sans-serif',
+  ].join(';');
+
   t.innerHTML = `
-    <div class="flex items-center gap-3">
-      <div class="w-2 h-2 bg-violet-400 rounded-full animate-ping" />
-      <span>${msg}</span>
+    <div style="width:34px;height:34px;border-radius:10px;background:${iconBg};display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">${icon}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:12px;font-weight:700;color:#1E293B;line-height:1.3">${title}</div>
+      ${sub ? `<div style="font-size:10px;color:#94A3B8;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${sub}</div>` : ''}
     </div>
+    <div style="position:absolute;bottom:0;left:3px;right:0;height:2px;background:${accent};border-radius:0 0 16px 0;transform-origin:left;animation:toastProgress 3s linear forwards"></div>
   `;
+
+  // Injection keyframes si besoin
+  if (!document.getElementById('toast-styles')) {
+    const style = document.createElement('style');
+    style.id = 'toast-styles';
+    style.textContent = `
+      @keyframes toastIn { from { opacity:0; transform:translateX(32px) scale(.95) } to { opacity:1; transform:translateX(0) scale(1) } }
+      @keyframes toastProgress { from { transform:scaleX(1) } to { transform:scaleX(0) } }
+    `;
+    document.head.appendChild(style);
+  }
+
   document.body.appendChild(t);
-  setTimeout(() => {
-    t.classList.add('animate-[slideOut_0.3s_ease-in]');
-    setTimeout(() => t.remove(), 300);
-  }, 4000);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(32px) scale(.95)'; t.style.transition = 'all .2s ease'; setTimeout(() => t.remove(), 200); }, 3000);
 };
 
 // ==================== MOCK DATA ====================
@@ -1417,21 +1446,72 @@ export default function App() {
         onClose={() => setIsHelpOpen(false)} 
       />
 
-      {/* --- TOASTS --- */}
-      <div className="fixed top-20 right-8 z-[1000] flex flex-col gap-2 pointer-events-none">
+      {/* ─── TOASTS ─── */}
+      <div className="fixed top-20 right-5 z-[1000] flex flex-col gap-2 pointer-events-none" style={{ width: 320 }}>
         <AnimatePresence>
-          {toasts.map(t => (
-            <motion.div
-              key={t.id}
-              initial={{ opacity: 0, x: 20, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-2xl font-black text-[10px] uppercase tracking-widest flex items-center gap-3 border border-slate-700 pointer-events-auto"
-            >
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              {t.msg}
-            </motion.div>
-          ))}
+          {toasts.map(t => {
+            // Détecter le type depuis le message pour choisir l'icône/couleur
+            const isError   = /erreur|error|échoué|failed|impossible/i.test(t.msg);
+            const isWarn    = /solde|impayé|attention|avertissement|alerte/i.test(t.msg);
+            const isSuccess = !isError && !isWarn;
+            const accent  = isError ? '#EF4444' : isWarn ? '#F59E0B' : '#10B981';
+            const iconBg  = isError ? '#FEF2F2' : isWarn ? '#FFF7ED' : '#ECFDF5';
+            const icon    = isError ? '❌' : isWarn ? '⚠️' : '✅';
+            // Séparer titre / sous-titre si le message contient " · "
+            const [title, ...subs] = t.msg.split(' · ');
+            const sub = subs.join(' · ');
+            return (
+              <motion.div
+                key={t.id}
+                initial={{ opacity: 0, x: 32, scale: 0.95 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: 32, scale: 0.95 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                className="pointer-events-auto"
+                style={{
+                  background: 'white',
+                  borderRadius: 16,
+                  borderLeft: `3px solid ${accent}`,
+                  boxShadow: '0 8px 40px rgba(0,0,0,.10), 0 0 0 1px rgba(0,0,0,.04)',
+                  padding: '12px 14px',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 12,
+                }}
+              >
+                {/* Icône */}
+                <div style={{
+                  width: 34, height: 34, borderRadius: 10, background: iconBg,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 15, flexShrink: 0,
+                }}>
+                  {icon}
+                </div>
+                {/* Texte */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#1E293B', lineHeight: 1.3 }}>
+                    {title}
+                  </div>
+                  {sub && (
+                    <div style={{ fontSize: 10, color: '#94A3B8', marginTop: 2, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {sub}
+                    </div>
+                  )}
+                </div>
+                {/* Barre de progression */}
+                <motion.div
+                  initial={{ scaleX: 1 }}
+                  animate={{ scaleX: 0 }}
+                  transition={{ duration: 3, ease: 'linear' }}
+                  style={{
+                    position: 'absolute', bottom: 0, left: 3, right: 0,
+                    height: 2, background: accent, borderRadius: '0 0 16px 0',
+                    transformOrigin: 'left',
+                  }}
+                />
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
       </div>
 

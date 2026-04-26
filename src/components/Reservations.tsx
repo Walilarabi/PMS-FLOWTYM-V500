@@ -840,6 +840,15 @@ export const Reservations: React.FC<ReservationsProps> = ({
                   {filteredReservations.map(r => {
                     const client = clients.find(c => c.id === r.clientId);
                     const displayName = client?.name || r.guestName || '—';
+                    // Initiales pour l'avatar
+                    const initials = displayName.split(' ').map((w: string) => w[0]).slice(0,2).join('').toUpperCase();
+                    // Couleur avatar déterministe selon le nom
+                    const avatarColors = [
+                      ['#EDE9FE','#5B21B6'],['#ECFDF5','#065F46'],['#EFF6FF','#1D4ED8'],
+                      ['#FFF7ED','#9A3412'],['#FDF4FF','#6D28D9'],['#F0FDF4','#15803D'],
+                    ];
+                    const avatarPair = avatarColors[displayName.charCodeAt(0) % avatarColors.length];
+                    const [avatarBg, avatarFg] = avatarPair;
                     // Format dates JJ/MM/AAAA
                     const fmtDate = (iso: string) => {
                       if (!iso) return '—';
@@ -886,9 +895,26 @@ export const Reservations: React.FC<ReservationsProps> = ({
                         </td>
                         {/* Statut */}
                         <td className="px-3 py-1.5 text-center">{statusBadge()}</td>
-                        {/* 1. Client — sans le canal (doublon supprimé) */}
+                        {/* Client — avatar + nom + email */}
                         <td className="px-3 py-1.5">
-                          <div className="font-black text-slate-800 text-[12px] leading-none">{displayName}</div>
+                          <div className="flex items-center gap-2">
+                            <div style={{
+                              width: 28, height: 28, borderRadius: '50%',
+                              background: `linear-gradient(135deg, ${avatarBg}, ${avatarFg}22)`,
+                              border: `1.5px solid ${avatarFg}33`,
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              fontSize: 9, fontWeight: 800, color: avatarFg, flexShrink: 0,
+                              letterSpacing: '.02em',
+                            }}>
+                              {initials || '?'}
+                            </div>
+                            <div>
+                              <div className="font-black text-slate-800 text-[12px] leading-none">{displayName}</div>
+                              {(client?.email || r.email) && (
+                                <div className="text-[9px] text-slate-400 mt-0.5 leading-none">{client?.email || r.email}</div>
+                              )}
+                            </div>
+                          </div>
                         </td>
                         {/* 5. Nombre de personnes */}
                         <td className="px-3 py-1.5 text-center">
@@ -940,11 +966,23 @@ export const Reservations: React.FC<ReservationsProps> = ({
                         <td className="px-3 py-1.5">
                           <div className="scale-90 origin-left"><SourceLogo channelName={r.canal} /></div>
                         </td>
-                        {/* 4. Chambre — format Numéro + Typologie + Catégorie */}
+                        {/* Chambre — room badge */}
                         <td className="px-3 py-1.5">
-                          <div className="text-[12px] font-black text-slate-800 whitespace-nowrap">
-                            {r.room}
-                            {r.roomType && <span className="text-slate-500 font-bold"> – {r.roomType}{r.roomCategory ? ` ${r.roomCategory}` : ''}</span>}
+                          <div className="flex items-center gap-1.5">
+                            <div style={{
+                              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                              minWidth: 32, height: 24, borderRadius: 7, padding: '0 6px',
+                              background: '#F1F5F9', border: '1px solid #E2E8F0',
+                              fontSize: 10, fontWeight: 800, color: '#334155',
+                              fontVariantNumeric: 'tabular-nums', flexShrink: 0,
+                            }}>
+                              {r.room || '—'}
+                            </div>
+                            {r.roomType && (
+                              <span className="text-[9px] font-bold text-slate-400 whitespace-nowrap hidden xl:inline">
+                                {r.roomType}{r.roomCategory ? ` ${r.roomCategory}` : ''}
+                              </span>
+                            )}
                           </div>
                         </td>
                         {/* Actions */}
@@ -992,9 +1030,71 @@ export const Reservations: React.FC<ReservationsProps> = ({
                   })}
                 </tbody>
               </table>
-              {filteredReservations.length === 0 && (
-                <div className="p-12 text-center text-slate-400 font-bold text-xs uppercase tracking-widest italic opacity-50">Aucun dossier trouvé</div>
-              )}
+                {filteredReservations.length === 0 && (
+                  <div style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center',
+                    justifyContent: 'center', padding: '56px 24px', textAlign: 'center',
+                  }}>
+                    {/* Icône avec halo */}
+                    <div style={{ position: 'relative', marginBottom: 24 }}>
+                      <div style={{
+                        position: 'absolute', inset: -12, borderRadius: 32,
+                        background: 'radial-gradient(circle, rgba(139,92,246,0.08), transparent)',
+                      }} />
+                      <div style={{
+                        width: 72, height: 72, borderRadius: 22,
+                        background: 'linear-gradient(135deg, #EDE9FE, #E0E7FF)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 30, position: 'relative',
+                        boxShadow: '0 4px 20px rgba(139,92,246,0.15)',
+                      }}>
+                        📅
+                      </div>
+                    </div>
+                    {/* Texte */}
+                    <div style={{ fontSize: 15, fontWeight: 800, color: '#1E293B', marginBottom: 6 }}>
+                      Aucune réservation trouvée
+                    </div>
+                    <div style={{ fontSize: 12, color: '#94A3B8', marginBottom: 24, maxWidth: 300, lineHeight: 1.6 }}>
+                      {searchTerm
+                        ? `Aucun résultat pour « ${searchTerm} ». Essayez d'ajuster vos filtres ou votre recherche.`
+                        : 'Commencez par créer votre première réservation ou ajustez les filtres actifs.'}
+                    </div>
+                    {/* CTA */}
+                    {!searchTerm && (
+                      <button
+                        onClick={() => setIsNewResModalOpen(true)}
+                        style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 8,
+                          padding: '10px 22px',
+                          background: 'linear-gradient(135deg, #8B5CF6, #6D28D9)',
+                          color: 'white', border: 'none', borderRadius: 12,
+                          fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                          boxShadow: '0 4px 14px rgba(139,92,246,0.35)',
+                        }}
+                      >
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Nouvelle réservation
+                      </button>
+                    )}
+                    {searchTerm && (
+                      <button
+                        onClick={() => setSearchTerm('')}
+                        style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 8,
+                          padding: '9px 20px',
+                          background: '#F1F5F9', color: '#475569',
+                          border: '1px solid #E2E8F0', borderRadius: 12,
+                          fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                        }}
+                      >
+                        ✕ Effacer la recherche
+                      </button>
+                    )}
+                  </div>
+                )}
             </div>
           </div>
         </div>
