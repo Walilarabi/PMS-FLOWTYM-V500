@@ -322,3 +322,27 @@ nav button:focus-visible {
     min-width: 900px !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   AUTO-RULES — Responsive 2 colonnes
+   ═══════════════════════════════════════════════════════════════ */
+.auto-rules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* Tablette portrait / petits laptops */
+@media (max-width: 1024px) {
+  .auto-rules-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .auto-rules-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
