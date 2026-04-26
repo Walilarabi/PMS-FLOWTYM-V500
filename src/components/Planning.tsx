@@ -701,12 +701,11 @@ export const Planning: React.FC<PlanningProps> = ({
                disabled={viewType === 'calendar'}
                onClick={() => {
                  if (d === 30) {
-                   // Vue Mois : repositionner au 1er du mois + jours réels
-                   const now = baseDate;
-                   const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-                   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-                   setBaseDate(firstOfMonth);
-                   setViewDays(daysInMonth);
+                   // Vue Mois : partir de aujourd'hui, 30 jours glissants
+                   const today = new Date();
+                   today.setHours(0, 0, 0, 0);
+                   setBaseDate(today);
+                   setViewDays(30);
                  } else {
                    setViewDays(d);
                  }
@@ -741,14 +740,8 @@ export const Planning: React.FC<PlanningProps> = ({
               const d = new Date(baseDate);
               if (viewType === 'calendar') {
                 d.setMonth(d.getMonth() - 1);
-              } else if (viewDays >= 28) {
-                // Vue mois : aller au 1er du mois précédent
-                const prevMonth = new Date(d.getFullYear(), d.getMonth() - 1, 1);
-                const daysInPrev = new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 0).getDate();
-                setViewDays(daysInPrev);
-                setBaseDate(prevMonth);
-                return;
               } else {
+                // Toutes les vues : reculer de viewDays jours
                 d.setDate(d.getDate() - viewDays);
               }
               setBaseDate(d);
@@ -771,14 +764,8 @@ export const Planning: React.FC<PlanningProps> = ({
               const d = new Date(baseDate);
               if (viewType === 'calendar') {
                 d.setMonth(d.getMonth() + 1);
-              } else if (viewDays >= 28) {
-                // Vue mois : aller au 1er du mois suivant
-                const nextMonth = new Date(d.getFullYear(), d.getMonth() + 1, 1);
-                const daysInNext = new Date(nextMonth.getFullYear(), nextMonth.getMonth() + 1, 0).getDate();
-                setViewDays(daysInNext);
-                setBaseDate(nextMonth);
-                return;
               } else {
+                // Toutes les vues : avancer de viewDays jours
                 d.setDate(d.getDate() + viewDays);
               }
               setBaseDate(d);
