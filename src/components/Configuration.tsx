@@ -4,6 +4,7 @@ import { useToast, ToastContainer, supabase } from './configuration/ConfigUtils'
 import { ConfigSections1to7 } from './configuration/ConfigSections1to7';
 import { ConfigSections8to21 } from './configuration/ConfigSections8to21';
 import { ConfigTemplates } from './configuration/ConfigTemplates';
+import { ConfigPeripherals } from './configuration/ConfigPeripherals';
 
 type ConfigProps = { onBack?: () => void };
 
@@ -217,6 +218,7 @@ export const Configuration: React.FC<ConfigProps> = ({ onBack }) => {
         { id: 'languages', label: 'Langues',               icon: 'fa-language'   },
         { id: 'media',     label: 'Médias',                icon: 'fa-images'     },
         { id: 'equipments',label: 'Équipements',            icon: 'fa-concierge-bell'},
+        { id: 'peripherals',label: 'Périphériques',          icon: 'fa-print'          },
       ],
     },
     {
@@ -450,6 +452,7 @@ export const Configuration: React.FC<ConfigProps> = ({ onBack }) => {
               <ConfigSections1to7 {...s1to7Props} />
               <ConfigSections8to21 {...s8to21Props} />
               {activeTab === 'templates' && <ConfigTemplates toast={toast} />}
+              {activeTab === 'peripherals' && <ConfigPeripherals toast={toast} />}
             </motion.div>
           </AnimatePresence>
         </div>
