@@ -107,8 +107,8 @@ const INITIAL_RATE_PLANS: RatePlan[] = [
 const FR_DAYS = ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'];
 const FR_MONTHS = ['jan', 'fév', 'mar', 'avr', 'mai', 'jun', 'jul', 'aoû', 'sep', 'oct', 'nov', 'déc'];
 
-export const Tarifs: React.FC<{ initialTab?: string }> = ({ initialTab = 'rateplans' }) => {
-  const [activeTab, setActiveTab] = useState(initialTab);
+export const Tarifs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('rateplans');
   const [ratePlans, setRatePlans] = useState<RatePlan[]>(() => {
     const saved = localStorage.getItem('flowtym_cfg_rps');
     return saved ? JSON.parse(saved) : INITIAL_RATE_PLANS;
@@ -255,80 +255,32 @@ export const Tarifs: React.FC<{ initialTab?: string }> = ({ initialTab = 'ratepl
           </div>
         </div>
         <div className="flex gap-2">
-           <button onClick={() => {}} className="bg-primary text-white px-5 py-3 rounded-2xl text-xs font-semibold shadow-xl shadow-primary/20 hover:bg-primary-dark transition-all flex items-center gap-2">
+           <button onClick={handlePullDedge} className="bg-white border border-slate-200 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center gap-2">
+              <ArrowDown className="w-4 h-4" /> Pull D-Edge
+           </button>
+           <button onClick={() => {}} className="bg-white border border-slate-200 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center gap-2">
+              <Upload className="w-4 h-4" /> Import Excel
+           </button>
+           <button onClick={() => {}} className="bg-primary text-white px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:bg-primary-dark transition-all flex items-center gap-2">
               <Plus className="w-4 h-4" /> Nouveau Rate Plan
            </button>
         </div>
       </div>
 
-      {/* ─── KPI MASQUE ─── */}
+      {/* ─── HUD ─── */}
       <div className="grid grid-cols-5 gap-4">
         {[
-          {
-            l: 'Rate Plans actifs', v: ratePlans.filter(r => r.active).length,
-            total: ratePlans.length, d: `sur ${ratePlans.length} configurés`,
-            c: '#8B5CF6', icon: (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-            ), trend: '+2 ce mois', trendUp: true,
-          },
-          {
-            l: 'Mappés Channel Manager', v: '38',
-            total: 40, d: '95% mappés D-Edge',
-            c: '#10B981', icon: (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-            ), trend: '✓ Sync OK', trendUp: true,
-          },
-          {
-            l: 'Types de chambre', v: roomTypes.length,
-            total: null, d: 'DBL · SU · FAM · ADJ',
-            c: '#3B82F6', icon: (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            ), trend: 'Stables', trendUp: null,
-          },
-          {
-            l: 'En attente de push', v: pendingPush.length,
-            total: null, d: pendingPush.length > 0 ? '⚠ À synchroniser' : '✓ Tout synchronisé',
-            c: pendingPush.length > 0 ? '#F59E0B' : '#10B981',
-            icon: (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-            ), trend: pendingPush.length > 0 ? `${pendingPush.length} rate plans` : 'À jour', trendUp: pendingPush.length === 0,
-          },
-          {
-            l: 'Dernière synchronisation', v: '12h04',
-            total: null, d: 'Aujourd\'hui · Succès',
-            c: '#10B981', icon: (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-            ), trend: 'Auto · 23h00', trendUp: true,
-          },
+          { l: 'Rate Plans actifs', v: ratePlans.length, d: 'sur 40 config.', c: '#8B5CF6' },
+          { l: 'Mappés D-Edge', v: '38', d: '✓ 95% mappés', c: '#10b981' },
+          { l: 'Room Types', v: roomTypes.length, d: 'DBL · SU · ADJ', c: '#3b82f6' },
+          { l: 'En attente sync', v: pendingPush.length, d: '⚠ À pousser', c: '#f59e0b' },
+          { l: 'Dernière sync', v: '12h04', d: '✓ Succès', c: '#10b981' },
         ].map((k, i) => (
-          <div key={i} className="bg-white rounded-2xl p-5 border border-slate-100 relative overflow-hidden group hover:border-slate-200 hover:shadow-md transition-all">
-            {/* Barre couleur top */}
-            <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl" style={{ background: k.c }} />
-            {/* Icône */}
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3 flex-shrink-0"
-              style={{ background: k.c + '14', color: k.c }}>
-              {k.icon}
-            </div>
-            {/* Label */}
-            <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">{k.l}</div>
-            {/* Valeur + barre de progression */}
-            <div className="flex items-end gap-2 mb-1">
-              <div className="text-2xl font-black text-slate-800" style={{ letterSpacing: '-0.5px' }}>{k.v}</div>
-              {k.total && (
-                <div className="text-[11px] font-semibold text-slate-400 mb-0.5">/ {k.total}</div>
-              )}
-            </div>
-            {k.total && (
-              <div className="h-1.5 rounded-full bg-slate-100 mb-2 overflow-hidden">
-                <div className="h-full rounded-full transition-all duration-500"
-                  style={{ width: `${(Number(k.v) / k.total) * 100}%`, background: k.c }} />
-              </div>
-            )}
-            {/* Delta */}
-            <div className="text-[10px] font-semibold flex items-center gap-1"
-              style={{ color: k.trendUp === true ? '#10B981' : k.trendUp === false ? '#EF4444' : '#94A3B8' }}>
-              {k.trendUp === true ? '↑' : k.trendUp === false ? '↓' : '·'} {k.trend}
-            </div>
+          <div key={i} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden group">
+            <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: k.c }} />
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">{k.l}</span>
+            <div className="text-xl font-black text-slate-800 mt-1">{k.v}</div>
+            <div className="text-[9px] font-bold text-slate-300 mt-1 uppercase tracking-widest">{k.d}</div>
           </div>
         ))}
       </div>
@@ -661,6 +613,15 @@ export const Tarifs: React.FC<{ initialTab?: string }> = ({ initialTab = 'ratepl
                    <ArrowUp className="w-4 h-4" /> Synchroniser tout
                 </button>
              </div>
+          </motion.div>
+        )}
+
+        {/* ─── TAB: TABLEAU RMS ─── */}
+        {activeTab === 'rms' && (
+          <motion.div
+            key="rms" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+          >
+            <RMSTableau />
           </motion.div>
         )}
 
