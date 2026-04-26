@@ -215,3 +215,89 @@ td [class*="rounded-full"][class*="font-bold"] {
 .solde-error-banner {
   animation: bannerIn 0.2s ease-out;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   FOCUS VISIBLE — Navigation au clavier (Tab)
+   Applicable : Planning, Vue du Jour, Réservations, toutes modales
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. Règle globale : tous les inputs/select/textarea ── */
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible {
+  outline: none !important;
+  border-color: #8B5CF6 !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18) !important;
+  background-color: #ffffff !important;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+
+/* ── 2. Conteneurs wrapper (style F dans ReservationFormModal) ──
+   L'input est transparent dans un div — on cible le wrapper
+   via :focus-within pour que le glow apparaisse sur le conteneur */
+div:focus-within[style*="border: 1.5px solid #EDE9FE"],
+div:focus-within[style*="border: 1.5px solid rgb(237, 233, 254)"],
+div:focus-within[style*="border:1.5px solid #EDE9FE"] {
+  border-color: #8B5CF6 !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18) !important;
+  background-color: #ffffff !important;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+
+/* ── 3. Champ en erreur (FE dans ReservationFormModal) ──
+   Garde bordure rouge + ajoute glow violet */
+div:focus-within[style*="border: 1.5px solid #EF4444"],
+div:focus-within[style*="border: 1.5px solid rgb(239, 68, 68)"] {
+  border-color: #EF4444 !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18) !important;
+  transition: box-shadow 0.15s ease-in-out !important;
+}
+
+/* ── 4. Inputs avec outline-none via className Tailwind ──
+   Cibles : Planning, Reservations, CheckinModal, CheckoutModal */
+.outline-none:focus,
+[class*="outline-none"]:focus {
+  outline: none !important;
+  border-color: #8B5CF6 !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18) !important;
+}
+
+/* ── 5. Overrides focus-ring Tailwind existants ──
+   Uniformiser les focus:ring-2 focus:ring-primary/20 existants */
+.focus\:ring-2:focus {
+  --tw-ring-color: rgba(139, 92, 246, 0.18);
+  --tw-ring-offset-shadow: 0 0 0 0px #fff;
+  --tw-ring-shadow: 0 0 0 3px var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), 0 0 #0000 !important;
+  border-color: #8B5CF6 !important;
+}
+
+/* ── 6. Checkbox & Radio ── */
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+  outline: 2px solid #8B5CF6 !important;
+  outline-offset: 2px !important;
+  box-shadow: none !important;
+}
+
+/* ── 7. NatSelector (sélecteur de nationalité custom) ──
+   Le sélecteur ouvre une liste — mettre en valeur le trigger */
+button:focus-visible {
+  outline: 2px solid #8B5CF6 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15) !important;
+  border-radius: inherit;
+}
+
+/* Exception : boutons de navigation principale (pas de glow) */
+header button:focus-visible,
+nav button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
+

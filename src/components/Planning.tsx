@@ -813,7 +813,7 @@ export const Planning: React.FC<PlanningProps> = ({
             </div>
 
           <select 
-            className="bg-slate-50 border border-slate-100 rounded-lg px-2 py-2 text-[9px] font-black capitalize tracking-tight text-slate-500 outline-none hover:border-slate-200 transition-colors cursor-pointer"
+            className="bg-slate-50 border border-slate-100 rounded-lg px-2 py-2 text-[9px] font-black capitalize tracking-tight text-slate-500 outline-none hover:border-slate-200 focus:border-primary focus:ring-[3px] focus:ring-primary/20 transition-all cursor-pointer"
             value={typeFilter}
             onChange={e => setTypeFilter(e.target.value)}
           >
@@ -1726,7 +1726,7 @@ export const Planning: React.FC<PlanningProps> = ({
                     <div className="space-y-2">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Désignation Événement*</label>
                       <input 
-                        className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-black text-slate-800 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" 
+                        className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-black text-slate-800 outline-none focus:ring-[3px] focus:ring-primary/20 focus:border-primary focus:bg-white transition-all" 
                         placeholder="Ex: Fashion Week, Salon Auto..."
                         value={newEvent.name}
                         onChange={e => setNewEvent({...newEvent, name: e.target.value})}
@@ -1735,7 +1735,7 @@ export const Planning: React.FC<PlanningProps> = ({
                     <div className="space-y-2">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Lieux publics impactés</label>
                       <input 
-                        className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-black text-slate-800 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" 
+                        className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-black text-slate-800 outline-none focus:ring-[3px] focus:ring-primary/20 focus:border-primary focus:bg-white transition-all" 
                         placeholder="Ex: Parc des Expos, centre ville" 
                         value={newEvent.location}
                         onChange={e => setNewEvent({...newEvent, location: e.target.value})}
@@ -1750,7 +1750,7 @@ export const Planning: React.FC<PlanningProps> = ({
                         <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <input 
                           type="date"
-                          className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold outline-none focus:border-blue-500 transition-all" 
+                          className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/20 transition-all" 
                           value={newEvent.start}
                           onChange={e => setNewEvent({...newEvent, start: e.target.value})}
                         />
@@ -1762,7 +1762,7 @@ export const Planning: React.FC<PlanningProps> = ({
                         <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <input 
                           type="date"
-                          className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold outline-none focus:border-blue-500 transition-all" 
+                          className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/20 transition-all" 
                           value={newEvent.end}
                           onChange={e => setNewEvent({...newEvent, end: e.target.value})}
                         />

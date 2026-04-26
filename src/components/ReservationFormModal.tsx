@@ -476,10 +476,20 @@ const ReservationFormModal: React.FC<Props> = ({
   };
 
   // ── Styles de base ──
-  const F: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: 11, background: '#F5F3FF', border: '1.5px solid #EDE9FE', borderRadius: 16, padding: '0 16px', height: 56 };
+  const F: React.CSSProperties  = { display: 'flex', alignItems: 'center', gap: 11, background: '#F5F3FF', border: '1.5px solid #EDE9FE', borderRadius: 16, padding: '0 16px', height: 56, transition: 'border-color .15s, box-shadow .15s' };
+  const FF: React.CSSProperties = { ...F, border: '1.5px solid #8B5CF6', background: '#ffffff', boxShadow: '0 0 0 3px rgba(139,92,246,0.18)' };
   const FE: React.CSSProperties = { ...F, border: '1.5px solid #EF4444' };
+  const FEF: React.CSSProperties = { ...FE, background: '#ffffff', boxShadow: '0 0 0 3px rgba(139,92,246,0.18)' };
   const inp: React.CSSProperties = { background: 'transparent', border: 'none', outline: 'none', fontFamily: 'Inter,sans-serif', fontSize: 14, fontWeight: 500, color: '#111827', width: '100%' };
   const SEP = <div style={{ height: 1, background: 'linear-gradient(to right,transparent,#E5E7EB,transparent)', margin: '2px 0' }} />;
+
+  // Focus state pour les conteneurs F
+  const [focusedField, setFocusedField] = React.useState<string | null>(null);
+  const foc = (name: string) => ({ onFocus: () => setFocusedField(name), onBlur: () => setFocusedField(null) });
+  const Fst = (name: string, hasError = false): React.CSSProperties =>
+    hasError
+      ? (focusedField === name ? FEF : FE)
+      : (focusedField === name ? FF  : F);
 
   return (
     <>
@@ -540,29 +550,29 @@ const ReservationFormModal: React.FC<Props> = ({
 
                 {/* Email + Tel */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  <div style={F}><Ico d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6" /><input style={inp} type="email" placeholder="Email" value={form.email} onChange={e => set('email', e.target.value)} /></div>
-                  <div style={F}><Ico d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 10a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18l3-.01" /><input style={inp} type="tel" placeholder="Téléphone" value={form.phone} onChange={e => set('phone', e.target.value)} /></div>
+                  <div style={Fst('email')} {...foc('email')}><Ico d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6" /><input style={inp} type="email" placeholder="Email" value={form.email} onChange={e => set('email', e.target.value)} /></div>
+                  <div style={Fst('phone')} {...foc('phone')}><Ico d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 10a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18l3-.01" /><input style={inp} type="tel" placeholder="Téléphone" value={form.phone} onChange={e => set('phone', e.target.value)} /></div>
                 </div>
 
                 {/* Adultes + Enfants + Société */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
-                  <div style={F}><Ico d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" /><input style={{ ...inp, color: '#7C3AED', fontWeight: 700 }} type="number" placeholder="Adultes" min={1} value={form.adults} onChange={e => set('adults', +e.target.value || 1)} /></div>
-                  <div style={F}><Ico d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /><input style={{ ...inp, color: '#7C3AED', fontWeight: 700 }} type="number" placeholder="Enfants" min={0} value={form.children} onChange={e => set('children', +e.target.value || 0)} /></div>
-                  <div style={F}><Ico d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><input style={inp} type="text" placeholder="Société" value={form.company} onChange={e => set('company', e.target.value)} /></div>
+                  <div style={Fst('adults')} {...foc('adults')}><Ico d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" /><input style={{ ...inp, color: '#7C3AED', fontWeight: 700 }} type="number" placeholder="Adultes" min={1} value={form.adults} onChange={e => set('adults', +e.target.value || 1)} /></div>
+                  <div style={Fst('children')} {...foc('children')}><Ico d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /><input style={{ ...inp, color: '#7C3AED', fontWeight: 700 }} type="number" placeholder="Enfants" min={0} value={form.children} onChange={e => set('children', +e.target.value || 0)} /></div>
+                  <div style={Fst('company')} {...foc('company')}><Ico d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><input style={inp} type="text" placeholder="Société" value={form.company} onChange={e => set('company', e.target.value)} /></div>
                 </div>
 
                 {SEP}
 
                 {/* Dates + Canal */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
-                  <div style={F}>
+                  <div style={Fst('checkIn')} {...foc('checkIn')}>
                     <Ico d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 9, fontWeight: 700, color: '#8B5CF6', textTransform: 'uppercase', letterSpacing: 1 }}>Arrivée</div>
                       <input style={inp} type="date" value={form.checkIn} onChange={e => set('checkIn', e.target.value)} />
                     </div>
                   </div>
-                  <div style={F}>
+                  <div style={Fst('checkOut')} {...foc('checkOut')}>
                     <Ico d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 16l2 2 4-4" />
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 9, fontWeight: 700, color: '#8B5CF6', textTransform: 'uppercase', letterSpacing: 1 }}>Départ</div>
@@ -577,7 +587,7 @@ const ReservationFormModal: React.FC<Props> = ({
 
                 {/* Référence + Type chambre + Numéro */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
-                  <div style={F}>
+                  <div style={Fst('reference')} {...foc('reference')}>
                     <Ico d="M9 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3m-1-4H9a1 1 0 0 0-1 1v4h8V4a1 1 0 0 0-1-1z" />
                     <input style={{ ...inp, color: '#7C3AED', fontWeight: 700, fontFamily: 'monospace' }} type="text" placeholder="Référence" value={form.reference} onChange={e => set('reference', e.target.value)} />
                   </div>

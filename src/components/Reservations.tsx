@@ -693,14 +693,14 @@ export const Reservations: React.FC<ReservationsProps> = ({
           <input 
             type="text"
             placeholder="Nom, chambre, canal..."
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-[3px] focus:ring-primary/20 focus:border-primary focus:bg-white transition-all"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
         </div>
         <div className="flex items-center gap-3 ml-auto">
           <select 
-            className="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary"
+            className="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/20 transition-all"
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
           >
@@ -709,7 +709,7 @@ export const Reservations: React.FC<ReservationsProps> = ({
             <option value="checked_in">Checkin</option>
           </select>
           <select 
-            className="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary"
+            className="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/20 transition-all"
             value={canalFilter}
             onChange={e => setCanalFilter(e.target.value)}
           >
@@ -1151,7 +1151,7 @@ export const Reservations: React.FC<ReservationsProps> = ({
                     type="email"
                     value={reminderEmail}
                     onChange={e => setReminderEmail(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all font-medium"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-[3px] focus:ring-primary/20 focus:border-primary focus:bg-white transition-all font-medium"
                   />
                 </div>
 
@@ -1162,7 +1162,7 @@ export const Reservations: React.FC<ReservationsProps> = ({
                     rows={5}
                     value={reminderMessage}
                     onChange={e => setReminderMessage(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all resize-none font-medium leading-relaxed"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-[3px] focus:ring-primary/20 focus:border-primary focus:bg-white transition-all resize-none font-medium leading-relaxed"
                   />
                 </div>
 
