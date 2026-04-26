@@ -245,7 +245,7 @@ export const Clients: React.FC<ClientsProps> = ({ clients, onUpdateClient, onAdd
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
           <input 
             placeholder="Rechercher..." 
-            className="w-full pl-10 pr-3.5 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary focus:bg-white transition-all text-xs bg-slate-50/50" 
+            className="w-full pl-10 pr-3.5 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary focus:bg-white transition-all text-xs bg-slate-50" 
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
@@ -539,7 +539,7 @@ export const Clients: React.FC<ClientsProps> = ({ clients, onUpdateClient, onAdd
 
                 {/* ── SECTION: STATS BAR ── */}
                 {selectedClient.id !== 0 && (
-                  <div className="grid grid-cols-4 gap-4 p-6 bg-primary-light/30 rounded-[32px] border border-primary/10">
+                  <div className="grid grid-cols-4 gap-4 p-6 bg-violet-50 rounded-3xl border border-primary/10">
                     <div className="text-center">
                       <div className="text-[10px] font-black text-primary/60 uppercase tracking-widest mb-1 flex items-center justify-center gap-1">
                         <Target className="w-2.5 h-2.5" /> Séjours

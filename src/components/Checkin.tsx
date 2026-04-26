@@ -61,7 +61,7 @@ export const Checkin: React.FC<CheckinProps> = ({ clients, reservations, rooms, 
         {/* ─── ARRIVALS ─── */}
         <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden flex flex-col">
            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-emerald-50/30">
-              <h3 className="text-sm font-black text-emerald-600 uppercase tracking-widest flex items-center gap-2">
+              <h3 className="text-sm font-bold text-emerald-600 flex items-center gap-2">
                  <ArrowRight className="w-4 h-4" /> Arrivées du jour
               </h3>
               <span className="bg-emerald-100 text-emerald-600 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">{arrivals.length} dossiers</span>
@@ -107,7 +107,7 @@ export const Checkin: React.FC<CheckinProps> = ({ clients, reservations, rooms, 
         {/* ─── DEPARTURES ─── */}
         <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden flex flex-col">
            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-amber-50/30">
-              <h3 className="text-sm font-black text-amber-600 uppercase tracking-widest flex items-center gap-2">
+              <h3 className="text-sm font-bold text-amber-600 flex items-center gap-2">
                  <ArrowLeft className="w-4 h-4" /> Départs attendus
               </h3>
               <span className="bg-amber-100 text-amber-600 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">{departures.length} dossiers</span>
@@ -146,7 +146,7 @@ export const Checkin: React.FC<CheckinProps> = ({ clients, reservations, rooms, 
       {/* ─── IN HOUSE TABLE ─── */}
       <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden">
         <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-            <h3 className="text-sm font-black text-slate-700 uppercase tracking-widest flex items-center gap-2">
+            <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
                <CheckCircle2 className="w-4 h-4 text-primary" /> Clients en séjour
             </h3>
             <span className="bg-primary-light text-primary px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">{inHouse.length} résidents</span>

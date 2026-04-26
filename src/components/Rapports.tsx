@@ -1255,6 +1255,29 @@ const ApercuView: React.FC<{
   );
 };
 
+// ─── EMPTY STATE RAPPORTS ────────────────────────────────────────────────────
+const ReportEmptyState = ({ code }: { code: string }) => (
+  <div style={{ display:'flex', flexDirection:'column', alignItems:'center',
+    justifyContent:'center', padding:'56px 24px', textAlign:'center' }}>
+    <div style={{ position:'relative', marginBottom:24 }}>
+      <div style={{ position:'absolute', inset:-10, borderRadius:28,
+        background:'radial-gradient(circle, rgba(139,92,246,0.07), transparent)' }} />
+      <div style={{ width:68, height:68, borderRadius:20,
+        background:'linear-gradient(135deg, #EDE9FE, #E0E7FF)',
+        display:'flex', alignItems:'center', justifyContent:'center',
+        fontSize:28, position:'relative', boxShadow:'0 4px 18px rgba(139,92,246,0.12)' }}>
+        📊
+      </div>
+    </div>
+    <div style={{ fontSize:15, fontWeight:700, color:'#1E293B', marginBottom:6 }}>
+      Aucune donnée pour {code}
+    </div>
+    <div style={{ fontSize:12, color:'#94A3B8', maxWidth:280, lineHeight:1.6 }}>
+      Les données apparaîtront dès qu'elles seront disponibles dans Supabase.
+    </div>
+  </div>
+);
+
 export const Rapports: React.FC<ReportProps> = ({
   onBack,
   clients,
@@ -2967,6 +2990,9 @@ export const Rapports: React.FC<ReportProps> = ({
                         ))}
                       </tbody>
                     </table>
+                    {genericMockData.length === 0 && (
+                      <ReportEmptyState code={activeReport.split(' ')[0]} />
+                    )}
                   </div>
 
                   {/* ─── PAGINATION ─── */}

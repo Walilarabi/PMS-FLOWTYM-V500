@@ -340,7 +340,7 @@ export const ReservationDetailPanel: React.FC<ReservationDetailPanelProps> = ({
     console.log(`Envoi email ${type} à ${reservation.email}...\n\n${body}`);
     
     setTimeout(() => {
-      alert(`✅ Email ${withLink ? 'avec lien' : 'simple'} envoyé avec succès !\n\nDestinataire : ${reservation.email}\nObjet : Réservation confirmée - ${withLink ? 'Action requise : Paiement' : 'Mas Provencal Aix'}`);
+      window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: `Email envoyé · ${reservation.email}` } }));
       if (withLink) setIsPaymentModalOpen(false);
     }, 800);
   };

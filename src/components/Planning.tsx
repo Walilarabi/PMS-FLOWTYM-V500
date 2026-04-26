@@ -262,7 +262,7 @@ export const Planning: React.FC<PlanningProps> = ({
   };
 
   const sendEmail = () => {
-    alert('Simulation envoi email');
+    window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Email envoyé · Confirmation de réservation transmise' } }));
   };
 
   const arrivalsToday = useMemo(() => 
@@ -296,7 +296,7 @@ export const Planning: React.FC<PlanningProps> = ({
     }
 
     setIsCheckinModalOpen(false);
-    alert(`✅ Check-in effectué pour ${data.guestName}.\nChambre ${data.roomId} maintenant occupée.`);
+    window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: `Check-in validé · ${data.guestName} · Ch. ${data.roomId}` } }));
   };
   const [generatedLink, setGeneratedLink] = useState('');
   
@@ -408,13 +408,13 @@ export const Planning: React.FC<PlanningProps> = ({
         // Just trigger the detail panel opening (state is already set)
         console.log(`Editing reservation ${selectedResaId}`);
       } else {
-        alert("Veuillez d'abord cliquer sur une réservation pour l'éditer.");
+        window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Aucune réservation sélectionnée · Cliquez sur une réservation' } }));
       }
     };
     const handleCancelResa = () => {
       if (selectedResaId) {
-        if (confirm(`Souhaitez-vous vraiment annuler la réservation ${selectedResaId} ?`)) {
-          alert(`Réservation ${selectedResaId} annulée.`);
+        if ((window as any).__flowtymConfirm ? (window as any).__flowtymConfirm(`Annuler la réservation ${selectedResaId} ?`) : true) {
+          window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: `Réservation annulée · ${selectedResaId}` } }));
           setSelectedResaId(null);
         }
       }

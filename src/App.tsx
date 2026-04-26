@@ -522,10 +522,10 @@ export default function App() {
         if (searchInput) searchInput.focus();
         else window.dispatchEvent(new CustomEvent('focus-search')); 
         break;
-      case 'save': if (!clickButton('#saveBtn, .btn-save')) alert("Sauvegarde effectuée !"); break;
-      case 'undo': if (!clickButton('#undoBtn, .btn-undo')) alert("Action annulée"); break;
-      case 'redo': if (!clickButton('#redoBtn, .btn-redo')) alert("Action rétablie"); break;
-      case 'logout': if (!clickButton('#logoutBtn, .btn-logout')) { if(confirm("Déconnecter ?")) alert("Déconnexion..."); } break;
+      case 'save': if (!clickButton('#saveBtn, .btn-save')) window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Sauvegarde effectuée' } })); break;
+      case 'undo': if (!clickButton('#undoBtn, .btn-undo')) window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Action annulée' } })); break;
+      case 'redo': if (!clickButton('#redoBtn, .btn-redo')) window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Action rétablie' } })); break;
+      case 'logout': if (!clickButton('#logoutBtn, .btn-logout')) { handleLogout(); } break;
       case 'new-reservation': 
         if (!clickButton('#newReservationBtn, .btn-new-reservation')) {
           setActiveTab('planning');
@@ -543,7 +543,7 @@ export default function App() {
       case 'generate-report': if (!clickButton('.rapport-item.active, .report-tab.active')) setActiveTab('rapports'); break;
       case 'open-clients': if (!clickButton('.menu-item[data-module="clients"], #clientsBtn')) setActiveTab('clients'); break;
       case 'open-history': clickButton('#clientHistoryBtn, .btn-history'); setActiveTab('clients'); break;
-      case 'set-folio': if (!clickButton(`.folio-btn[data-folio="${params}"], [data-folio-action="${params}"]`)) alert(`Folio ${params} activé`); break;
+      case 'set-folio': if (!clickButton(`.folio-btn[data-folio="${params}"], [data-folio-action="${params}"]`)) window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: `Folio ${params} activé` } })); break;
       case 'cancel-selected': if (!clickButton('.cancel-reservation-btn, .btn-cancel-reservation')) window.dispatchEvent(new CustomEvent('cancel-selected')); break;
       case 'close-all': 
         if (activeWindowId) {
@@ -645,7 +645,7 @@ export default function App() {
     storeUpdateReservation(reservationId, { status: 'checked_out' });
 
     // 5. Notifier l'utilisateur
-    alert(`✅ Check-out chambre ${roomId} effectué - Ménage planifié`);
+    window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: `Check-out validé · Ch. ${roomId} · Ménage planifié` } }));
   };
 
   const handleConfirmCheckin = (data: any) => {
@@ -685,7 +685,7 @@ export default function App() {
       return c;
     }));
 
-    alert(`✅ Check-in réussi pour ${data.guestName} en chambre ${data.roomId}`);
+    window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: `Check-in validé · ${data.guestName} · Ch. ${data.roomId}` } }));
   };
 
   const handleAddReservation = (newRes: any) => {
@@ -1049,7 +1049,7 @@ export default function App() {
                 <Hotel className="w-20 h-20 text-slate-200 mb-6" />
                 <h2 className="text-2xl font-black text-slate-800 mb-2">Module en déploiement</h2>
                 <p className="text-slate-400 text-sm font-medium">Ce module v2.3 sera actif prochainement.</p>
-                <button className="mt-8 bg-slate-100 hover:bg-slate-200 text-slate-600 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-2 group" onClick={() => setActiveTab('planning')}>
+                <button className="mt-8 bg-slate-100 hover:bg-slate-200 text-slate-600 px-8 py-4 rounded-2xl font-semibold text-sm transition-all flex items-center gap-2 group" onClick={() => setActiveTab('planning')}>
                   <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Retour au planning
                 </button>
               </div>
@@ -1152,7 +1152,7 @@ export default function App() {
                       >
                         <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between">
                           <div>
-                            <span className="text-[11px] font-black text-slate-800 uppercase tracking-widest">Centre d'alertes</span>
+                            <span className="text-[12px] font-bold text-slate-800">Centre d'alertes</span>
                             {count > 0 && <span className="ml-2 bg-rose-100 text-rose-600 text-[9px] font-black px-2 py-0.5 rounded-full">{count} active{count > 1 ? 's' : ''}</span>}
                           </div>
                           <button onClick={() => setShowAlertes(false)} className="text-slate-400 hover:text-slate-600 transition-colors"><X className="w-4 h-4" /></button>
@@ -1170,7 +1170,7 @@ export default function App() {
                               </div>
                               <div>
                                 <div className="text-[11px] font-bold text-slate-700 leading-snug">{a.msg}</div>
-                                <div className="text-[9px] text-slate-400 mt-0.5 font-bold uppercase tracking-widest">Aujourd'hui</div>
+                                <div className="text-[9px] text-slate-400 mt-0.5 font-semibold">Aujourd'hui</div>
                               </div>
                             </div>
                           ))}
@@ -1178,7 +1178,7 @@ export default function App() {
                         {alertes.length > 0 && (
                           <div className="px-5 py-3 border-t border-slate-50">
                             <button onClick={() => { setShowAlertes(false); setActiveTab('flowboard'); }}
-                              className="w-full text-center text-[10px] font-black text-primary hover:text-violet-800 uppercase tracking-widest transition-colors">
+                              className="w-full text-center text-[11px] font-semibold text-primary hover:text-violet-800 transition-colors">
                               Voir le Flowboard →
                             </button>
                           </div>
@@ -1214,7 +1214,7 @@ export default function App() {
                   className="absolute top-full right-0 mt-3 w-64 bg-white rounded-3xl shadow-2xl border border-slate-100 p-2 z-[200] overflow-hidden"
                 >
                   <div className="p-4 border-b border-slate-50 mb-1">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Session active</p>
+                    <p className="text-[10px] font-semibold text-slate-400 mb-1">Session active</p>
                     <p className="text-xs font-black text-slate-800">ali.larabi@flowtym.com</p>
                   </div>
                   {[
@@ -1380,7 +1380,7 @@ export default function App() {
 
           <div className="hidden sm:flex items-center gap-4 border-l border-slate-200 pl-6 ml-4">
              <div className="text-right">
-                <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Raccourcis</div>
+                <div className="text-[9px] font-semibold text-slate-400 leading-none mb-1">Raccourcis</div>
                 <div className="flex items-center gap-1.5 font-sans font-bold text-[9px] text-slate-600">
                    <span className="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">F1</span> Aide
                    <span className="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 ml-1">Esc</span> Fermer
@@ -1397,8 +1397,8 @@ export default function App() {
         title={modalTitle}
         footer={
           <>
-            <button className="bg-slate-100 hover:bg-slate-200 text-slate-600 px-6 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-widest transition-all" onClick={() => setIsModalOpen(false)}>Annuler</button>
-            <button id="saveBtn" className="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-lg shadow-primary/20 transition-all" onClick={() => { alert("Données enregistrées !"); setIsModalOpen(false); }}>Enregistrer</button>
+            <button className="bg-slate-100 hover:bg-slate-200 text-slate-600 px-6 py-2.5 rounded-xl font-semibold text-[12px] transition-all" onClick={() => setIsModalOpen(false)}>Annuler</button>
+            <button id="saveBtn" className="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-xl font-semibold text-[12px] shadow-lg shadow-primary/20 transition-all" onClick={() => { setIsModalOpen(false); window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Données enregistrées · Paramètres mis à jour' } })); }}>Enregistrer</button>
           </>
         }
       >

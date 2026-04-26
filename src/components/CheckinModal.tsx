@@ -85,7 +85,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
 
   const handleValidate = () => {
     if (!formData.guestName || !formData.arrivalDate || !formData.departureDate || !formData.roomId) {
-      alert('Veuillez remplir les informations obligatoires (Nom, Dates, Chambre)');
+      window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Champs obligatoires manquants · Nom, Dates et Chambre requis' } }));
       return;
     }
     onConfirm(formData);
@@ -113,7 +113,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
               <LogIn className="w-6 h-6" />
               <div>
                 <h3 className="text-lg font-bold tracking-tight">Nouveau Check-in</h3>
-                <p className="text-[10px] font-medium opacity-80 uppercase tracking-widest mt-0.5">ENREGISTREMENT CLIENT IMMÉDIAT</p>
+                <p className="text-[10px] font-medium opacity-70 tracking-wide mt-0.5">Enregistrement client immédiat</p>
               </div>
             </div>
             <button 
@@ -128,7 +128,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
           <div className="p-6 space-y-4 max-h-[80vh] overflow-y-auto custom-scrollbar no-scrollbar">
             {/* Client */}
             <div className="space-y-1.5">
-              <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              <label className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-normal">
                 <User className="w-3 h-3" /> CLIENT
               </label>
               <input 
@@ -143,7 +143,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
             {/* Dates */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <label className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-normal">
                   <Calendar className="w-3 h-3" /> DATE ARRIVÉE
                 </label>
                 <input 
@@ -154,7 +154,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <label className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-normal">
                   <Calendar className="w-3 h-3" /> DATE DÉPART
                 </label>
                 <input 
@@ -169,7 +169,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
             {/* Pax */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <label className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-normal">
                   <Users className="w-3 h-3" /> ADULTES
                 </label>
                 <input 
@@ -181,7 +181,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <label className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-normal">
                   <Baby className="w-3 h-3" /> ENFANTS
                 </label>
                 <input 
@@ -197,7 +197,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
             {/* Email & Tel */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <label className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-normal">
                   <Mail className="w-3 h-3" /> EMAIL
                 </label>
                 <input 
@@ -209,7 +209,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <label className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-normal">
                   <Phone className="w-3 h-3" /> TÉLÉPHONE
                 </label>
                 <input 
@@ -224,7 +224,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
 
             {/* Room */}
             <div className="space-y-1.5">
-              <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              <label className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-normal">
                 <Bed className="w-3 h-3" /> CHAMBRE DISPONIBLE
               </label>
               <select 
@@ -244,7 +244,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
             {/* Channel & Payment Status */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <label className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-normal">
                   <Globe className="w-3 h-3" /> CANAL
                 </label>
                 <select 
@@ -261,7 +261,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
                 </select>
               </div>
               <div className="space-y-1.5">
-                <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <label className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-normal">
                   <CreditCard className="w-3 h-3" /> STATUT PAIEMENT
                 </label>
                 <select 
@@ -289,7 +289,7 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
 
             {/* Notes */}
             <div className="space-y-1.5">
-              <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              <label className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-normal">
                 <StickyNote className="w-3 h-3" /> NOTE DE PRÉFÉRENCE
               </label>
               <textarea 
@@ -306,13 +306,13 @@ export const CheckinModal: React.FC<CheckinModalProps> = ({
           <div className="p-6 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0">
             <button 
               onClick={onClose}
-              className="px-6 py-2.5 rounded-full bg-white border border-slate-200 text-slate-500 text-xs font-bold uppercase tracking-widest hover:bg-slate-50 transition-all"
+              className="px-6 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 text-sm font-600 hover:bg-slate-100 transition-all"
             >
               Annuler
             </button>
             <button 
               onClick={handleValidate}
-              className="px-8 py-2.5 rounded-full bg-[#8B5CF6] text-white text-xs font-bold uppercase tracking-widest shadow-lg shadow-[#8B5CF6]/20 hover:bg-[#7C3AED] transition-all flex items-center gap-2"
+              className="px-8 py-2.5 rounded-xl bg-[#8B5CF6] text-white text-sm font-semibold shadow-lg shadow-[#8B5CF6]/20 hover:bg-[#7C3AED] transition-all flex items-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" /> Valider Check-in
             </button>

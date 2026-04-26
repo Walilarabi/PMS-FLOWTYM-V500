@@ -179,3 +179,39 @@
     @apply font-sans text-text-main antialiased min-h-screen bg-bg;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   CORRECTIONS AUDIT UI/UX — A02 + A05
+   ═══════════════════════════════════════════════════════════════ */
+
+/* A02 — Normaliser la casse des boutons d'action */
+button:not(.badge):not(.status-badge):not([class*="nav-"]) {
+  letter-spacing: normal;
+}
+
+/* A05 — En-têtes de tableaux : casse normale, poids standardisé */
+thead th {
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  font-size: 10px;
+  color: #94A3B8;
+}
+
+/* Exceptions : badges de statut dans les cellules td (pas th) */
+td .badge-status,
+td [class*="rounded-full"][class*="font-black"],
+td [class*="rounded-full"][class*="font-bold"] {
+  /* Les badges dans les cellules gardent leur style */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Bannière inline solde impayé — animation entrée */
+@keyframes bannerIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.solde-error-banner {
+  animation: bannerIn 0.2s ease-out;
+}

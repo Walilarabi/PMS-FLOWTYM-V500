@@ -140,7 +140,7 @@ export const CheckinQR: React.FC<CheckinQRProps> = ({ reservations, clients }) =
                 className="relative h-full bg-white rounded-[60px] border-4 border-white shadow-2xl overflow-hidden flex flex-col"
               >
                 {/* QR CONTAINER */}
-                <div className="flex-1 flex flex-col items-center justify-center p-12 bg-slate-50/30">
+                <div className="flex-1 flex flex-col items-center justify-center p-12 bg-slate-50">
                   {status === 'success' ? (
                     <motion.div 
                       initial={{ scale: 0 }} 

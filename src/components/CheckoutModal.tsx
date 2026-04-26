@@ -50,6 +50,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [checkoutTab, setCheckoutTab] = useState<'invoice' | 'reservation' | 'cardex'>('invoice');
   const [activeFolio, setActiveFolio] = useState<number>(1);
   const [invoiceLines, setInvoiceLines] = useState<any[]>([]);
+  const [soldeError, setSoldeError] = useState<string>('');
   const PRESTATION_FAMILIES = [
     {
       id: 1,
@@ -191,7 +192,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
   const addInvoiceLine = () => {
     if (!newLineData.description || newLineData.amount <= 0) {
-      alert('Description et montant requis');
+      window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Champs requis · Description et montant obligatoires' } }));
       return;
     }
     
@@ -384,15 +385,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   };
 
   const handleFinalize = () => {
-    // Global balance check
     const globalTotals = calculateTotals();
     if (Math.abs(globalTotals.balance) > 0.01) {
-      alert(`Le solde global doit être nul pour finaliser le check-out (Solde actuel: ${globalTotals.balance.toFixed(2)}€)`);
+      setSoldeError(`Solde impayé de ${Math.abs(globalTotals.balance).toFixed(2)} € — encaissez avant de finaliser`);
       return;
     }
-    
+    setSoldeError('');
     onFinalize(roomId, reservation?.id || '', splitPayments);
-    alert(`Rapport opérationnel généré.\nCheck-out validé - Chambre mise en ménage.`);
+    window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: `Check-out validé · Ch. ${roomId} · Ménage planifié` } }));
   };
 
   useEffect(() => {
@@ -482,7 +482,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               ))}
             </div>
 
-            <div className="flex-1 overflow-y-auto p-10 no-scrollbar bg-slate-50/30">
+            <div className="flex-1 overflow-y-auto p-10 no-scrollbar bg-slate-50">
               {checkoutTab === 'reservation' && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid grid-cols-2 gap-8">
@@ -668,10 +668,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                      <table className="w-full border-collapse">
                         <thead>
                            <tr className="bg-slate-50 border-b border-slate-100">
-                              <th className="text-left py-2 px-4 text-[9px] font-black uppercase text-slate-400 tracking-widest">Date</th>
-                              <th className="text-left py-2 px-4 text-[9px] font-black uppercase text-slate-400 tracking-widest">Code</th>
+                              <th className="text-left py-2 px-4 text-[10px] font-semibold text-slate-400">Date</th>
+                              <th className="text-left py-2 px-4 text-[10px] font-semibold text-slate-400">Code</th>
                               <th className="text-center py-2 px-4 text-[9px] font-black uppercase text-slate-400 tracking-widest">Qté</th>
-                              <th className="text-left py-2 px-4 text-[9px] font-black uppercase text-slate-400 tracking-widest">Libellé</th>
+                              <th className="text-left py-2 px-4 text-[10px] font-semibold text-slate-400">Libellé</th>
                               <th className={`text-right py-2 px-2 text-[9px] font-black uppercase tracking-widest ${activeFolio === 1 ? 'text-primary' : 'text-slate-400'}`}>Folio 1 (Débit)</th>
                               <th className={`text-right py-2 px-2 text-[9px] font-black uppercase tracking-widest ${activeFolio === 2 ? 'text-primary' : 'text-slate-400'}`}>Folio 2 (Crédit)</th>
                               <th className={`text-right py-2 px-2 text-[9px] font-black uppercase tracking-widest ${activeFolio === 3 ? 'text-primary' : 'text-slate-400'}`}>Folio 3 (TVA)</th>
@@ -999,7 +999,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                              <button 
                                disabled={!transferTargetRoom || selectedLinesForTransfer.length === 0}
                                onClick={() => {
-                                  alert(`✅ Succès: ${selectedLinesForTransfer.length} prestation(s) transférée(s) vers la chambre ${transferTargetRoom}.`);
+                                  window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: `Prestations transférées · ${selectedLinesForTransfer.length} ligne(s) → Ch. ${transferTargetRoom}` } }));
                                   setInvoiceLines(prev => prev.filter(l => !selectedLinesForTransfer.includes(l.id)));
                                   setSelectedLinesForTransfer([]);
                                   setTransferTargetRoom('');
@@ -1122,9 +1122,27 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </button>
               </div>
 
-              <button 
+              {/* A10 — Bannière solde impayé inline */}
+              {soldeError && (
+                <div className="solde-error-banner" style={{
+                  background: '#FEF2F2', border: '1px solid #FECACA',
+                  borderRadius: 12, padding: '11px 16px', marginBottom: 8,
+                  display: 'flex', alignItems: 'center', gap: 10,
+                }}>
+                  <span style={{ fontSize: 18, flexShrink: 0 }}>⚠️</span>
+                  <span style={{ fontSize: 12, color: '#DC2626', fontWeight: 600, flex: 1 }}>
+                    {soldeError}
+                  </span>
+                  <button
+                    onClick={() => setSoldeError('')}
+                    style={{ fontSize: 14, color: '#DC2626', background: 'none', border: 'none', cursor: 'pointer', opacity: 0.6, padding: '2px 6px' }}
+                  >✕</button>
+                </div>
+              )}
+
+              <button
                 onClick={handleFinalize}
-                className="px-12 h-[56px] bg-primary text-white rounded-2xl text-[11px] font-black uppercase tracking-[4px] shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all active:scale-[0.98] flex items-center justify-center gap-3 relative overflow-hidden group"
+                className="px-12 h-[56px] bg-primary text-white rounded-2xl text-[12px] font-semibold shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all active:scale-[0.98] flex items-center justify-center gap-3 relative overflow-hidden group"
               >
                 <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                 <span className="relative z-10">Finaliser</span>

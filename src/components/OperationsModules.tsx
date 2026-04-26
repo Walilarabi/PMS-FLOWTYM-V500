@@ -198,7 +198,7 @@ export const Maintenance: React.FC = () => {
         <table className="w-full text-left text-[13px]">
           <thead className="bg-slate-50/80 border-b border-slate-100">
             <tr>{['Chambre', 'Type', 'Description', 'Priorité', 'Assigné', 'Statut', 'Créé le', 'Coût', ''].map(h => (
-              <th key={h} className="px-3 py-2 text-[9px] font-black uppercase text-slate-400">{h}</th>
+              <th key={h} className="px-3 py-2 text-[10px] font-semibold text-slate-400">{h}</th>
             ))}</tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
@@ -233,12 +233,12 @@ export const Maintenance: React.FC = () => {
               <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg pointer-events-auto p-8 space-y-4">
                 <h3 className="text-[15px] font-black text-slate-800 flex items-center gap-2"><i className="fa-solid fa-wrench text-primary" /> Signaler un incident</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Chambre</label><input type="text" value={form.room} onChange={e => setForm(f => ({...f, room: e.target.value}))} className={IC} placeholder="Ex: 101, Hall, Lobby..." /></div>
-                  <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Type</label><select value={form.type} onChange={e => setForm(f => ({...f, type: e.target.value}))} className={SC}>{['Plomberie','Électricité','Climatisation','Serrurerie','Peinture','Mobilier','Autre'].map(t => <option key={t}>{t}</option>)}</select></div>
-                  <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Priorité</label><select value={form.priority} onChange={e => setForm(f => ({...f, priority: e.target.value}))} className={SC}>{['Basse','Normale','Haute'].map(p => <option key={p}>{p}</option>)}</select></div>
-                  <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Assigné à</label><input type="text" value={form.assignedTo} onChange={e => setForm(f => ({...f, assignedTo: e.target.value}))} className={IC} placeholder="Paul R., Marc D..." /></div>
+                  <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Chambre</label><input type="text" value={form.room} onChange={e => setForm(f => ({...f, room: e.target.value}))} className={IC} placeholder="Ex: 101, Hall, Lobby..." /></div>
+                  <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Type</label><select value={form.type} onChange={e => setForm(f => ({...f, type: e.target.value}))} className={SC}>{['Plomberie','Électricité','Climatisation','Serrurerie','Peinture','Mobilier','Autre'].map(t => <option key={t}>{t}</option>)}</select></div>
+                  <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Priorité</label><select value={form.priority} onChange={e => setForm(f => ({...f, priority: e.target.value}))} className={SC}>{['Basse','Normale','Haute'].map(p => <option key={p}>{p}</option>)}</select></div>
+                  <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Assigné à</label><input type="text" value={form.assignedTo} onChange={e => setForm(f => ({...f, assignedTo: e.target.value}))} className={IC} placeholder="Paul R., Marc D..." /></div>
                 </div>
-                <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Description</label><textarea value={form.desc} onChange={e => setForm(f => ({...f, desc: e.target.value}))} className={IC + ' h-20 resize-none'} /></div>
+                <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Description</label><textarea value={form.desc} onChange={e => setForm(f => ({...f, desc: e.target.value}))} className={IC + ' h-20 resize-none'} /></div>
                 <div className="flex justify-end gap-3 pt-2">
                   <button onClick={() => setAddOpen(false)} className="px-5 py-2.5 rounded-xl text-[12px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all">Annuler</button>
                   <button onClick={() => { if (!form.room || !form.desc) return; setIncidents(prev => [...prev, { id: Date.now().toString(), ...form, status: 'Ouvert', created: new Date().toLocaleString('fr-FR').slice(0,16), cost: null }]); setAddOpen(false); setForm({ room: '', type: 'Plomberie', desc: '', priority: 'Normale', assignedTo: '' }); }} className="px-6 py-2.5 rounded-xl text-[12px] font-bold text-white bg-primary hover:bg-[#7b4be8] shadow-lg transition-all"><i className="fa-solid fa-save mr-1.5" />Enregistrer</button>
@@ -379,11 +379,11 @@ export const Consignes: React.FC = () => {
               <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg pointer-events-auto p-8 space-y-4">
                 <h3 className="text-[15px] font-black text-slate-800"><i className="fa-solid fa-book-open text-primary mr-2" />Nouvelle consigne</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Priorité</label><select value={form.priority} onChange={e => setForm(f => ({...f, priority: e.target.value}))} className={SC}><option>Basse</option><option>Normale</option><option>Haute</option></select></div>
-                  <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Vacation</label><select value={form.shift} onChange={e => setForm(f => ({...f, shift: e.target.value}))} className={SC}><option>Matin</option><option>Après-midi</option><option>Soir</option><option>Nuit</option></select></div>
+                  <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Priorité</label><select value={form.priority} onChange={e => setForm(f => ({...f, priority: e.target.value}))} className={SC}><option>Basse</option><option>Normale</option><option>Haute</option></select></div>
+                  <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Vacation</label><select value={form.shift} onChange={e => setForm(f => ({...f, shift: e.target.value}))} className={SC}><option>Matin</option><option>Après-midi</option><option>Soir</option><option>Nuit</option></select></div>
                 </div>
-                <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Tags (séparés par virgule)</label><input type="text" value={form.tags} onChange={e => setForm(f => ({...f, tags: e.target.value}))} className={IC} placeholder="VIP, Urgence, OTA..." /></div>
-                <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Contenu de la consigne *</label><textarea value={form.content} onChange={e => setForm(f => ({...f, content: e.target.value}))} className={IC + ' h-28 resize-none'} placeholder="Décrivez la consigne en détail..." /></div>
+                <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Tags (séparés par virgule)</label><input type="text" value={form.tags} onChange={e => setForm(f => ({...f, tags: e.target.value}))} className={IC} placeholder="VIP, Urgence, OTA..." /></div>
+                <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Contenu de la consigne *</label><textarea value={form.content} onChange={e => setForm(f => ({...f, content: e.target.value}))} className={IC + ' h-28 resize-none'} placeholder="Décrivez la consigne en détail..." /></div>
                 <div className="flex justify-end gap-3 pt-2">
                   <button onClick={() => setAddOpen(false)} className="px-5 py-2.5 rounded-xl text-[12px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all">Annuler</button>
                   <button onClick={() => { if (!form.content) return; setConsignes(prev => [{ id: Date.now().toString(), date: new Date().toLocaleString('fr-FR').slice(0,16), author: 'Moi', shift: form.shift, priority: form.priority, content: form.content, done: false, tags: form.tags.split(',').map(t => t.trim()).filter(Boolean) }, ...prev]); setAddOpen(false); setForm({ content: '', priority: 'Normale', shift: 'Matin', tags: '' }); }} className="px-6 py-2.5 rounded-xl text-[12px] font-bold text-white bg-primary hover:bg-[#7b4be8] shadow-lg transition-all"><i className="fa-solid fa-save mr-1.5" />Enregistrer</button>
@@ -426,7 +426,7 @@ export const ObjetsTrouves: React.FC<{ itemsProp?: any[] }> = ({ itemsProp = [] 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         <table className="w-full text-left text-[13px]">
           <thead className="bg-slate-50/80 border-b border-slate-100"><tr>
-            {['#', 'Description', 'Chambre', 'Trouvé le', 'Trouvé par', 'Propriétaire', 'Statut', 'Action'].map(h => <th key={h} className="px-4 py-3 text-[11px] font-black uppercase text-slate-400">{h}</th>)}
+            {['#', 'Description', 'Chambre', 'Trouvé le', 'Trouvé par', 'Propriétaire', 'Statut', 'Action'].map(h => <th key={h} className="px-4 py-3 text-[11px] font-semibold text-slate-400">{h}</th>)}
           </tr></thead>
           <tbody className="divide-y divide-slate-50">
             {items.map((item, i) => (
@@ -458,10 +458,10 @@ export const ObjetsTrouves: React.FC<{ itemsProp?: any[] }> = ({ itemsProp = [] 
             <motion.div initial={{ opacity: 0, scale: 0.94, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 12 }} transition={{ type: 'spring', damping: 25 }} className="fixed inset-0 z-[701] flex items-center justify-center p-4 pointer-events-none">
               <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md pointer-events-auto p-8 space-y-4">
                 <h3 className="text-[15px] font-black text-slate-800"><i className="fa-solid fa-box-open text-primary mr-2" />Enregistrer un objet trouvé</h3>
-                <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Description *</label><input type="text" value={form.desc} onChange={e => setForm(f => ({...f, desc: e.target.value}))} className={IC} placeholder="Chargeur, lunettes, sac..." /></div>
+                <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Description *</label><input type="text" value={form.desc} onChange={e => setForm(f => ({...f, desc: e.target.value}))} className={IC} placeholder="Chargeur, lunettes, sac..." /></div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Chambre / Lieu</label><input type="text" value={form.room} onChange={e => setForm(f => ({...f, room: e.target.value}))} className={IC} placeholder="101, Piscine..." /></div>
-                  <div><label className="text-[11px] font-black uppercase text-slate-400 block mb-1">Trouvé par</label><input type="text" value={form.foundBy} onChange={e => setForm(f => ({...f, foundBy: e.target.value}))} className={IC} placeholder="Prénom N." /></div>
+                  <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Chambre / Lieu</label><input type="text" value={form.room} onChange={e => setForm(f => ({...f, room: e.target.value}))} className={IC} placeholder="101, Piscine..." /></div>
+                  <div><label className="text-[11px] font-semibold text-slate-400 block mb-1">Trouvé par</label><input type="text" value={form.foundBy} onChange={e => setForm(f => ({...f, foundBy: e.target.value}))} className={IC} placeholder="Prénom N." /></div>
                 </div>
                 <div className="flex justify-end gap-3 pt-2">
                   <button onClick={() => setAddOpen(false)} className="px-5 py-2.5 rounded-xl text-[12px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all">Annuler</button>
@@ -538,9 +538,9 @@ export const PetiteCaisse: React.FC = () => {
     
     const { error } = await supabase.from('cash_counts').insert([data]);
     if (error) {
-       alert('Erreur lors de la sauvegarde: ' + error.message);
+       window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Erreur sauvegarde · ' + error.message } }));
     } else {
-       alert('✅ Comptage sauvegardé avec succès');
+       window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Comptage sauvegardé · Caisse mise à jour' } }));
     }
   };
 
@@ -812,7 +812,7 @@ export const PetiteCaisse: React.FC = () => {
                        <table className="w-full text-left text-[12px]">
                           <thead className="bg-slate-50 border-b border-slate-100">
                              <tr>
-                               {['Collaborateur', 'Encaissement', 'Shift'].map(h => <th key={h} className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">{h}</th>)}
+                               {['Collaborateur', 'Encaissement', 'Shift'].map(h => <th key={h} className="px-6 py-3 text-[10px] font-semibold text-slate-400">{h}</th>)}
                              </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100 italic-rows">
@@ -854,7 +854,7 @@ export const PetiteCaisse: React.FC = () => {
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-2">
-                            <label className="text-[11px] font-black uppercase text-slate-400 block mb-1.5 ml-1">Type de mouvement</label>
+                            <label className="text-[11px] font-semibold text-slate-400 block mb-1.5 ml-1">Type de mouvement</label>
                             <div className="flex gap-2">
                                 {['debit', 'credit'].map(t => (
                                     <button 
@@ -869,35 +869,35 @@ export const PetiteCaisse: React.FC = () => {
                         </div>
                         
                         <div>
-                            <label className="text-[11px] font-black uppercase text-slate-400 block mb-1.5 ml-1">Catégorie</label>
+                            <label className="text-[11px] font-semibold text-slate-400 block mb-1.5 ml-1">Catégorie</label>
                             <select value={form.cat} onChange={e => setForm(f => ({...f, cat: e.target.value}))} className={SC}>
                                 {cats.map(c => <option key={c}>{c}</option>)}
                             </select>
                         </div>
                         <div>
-                            <label className="text-[11px] font-black uppercase text-slate-400 block mb-1.5 ml-1">Montant (€) *</label>
+                            <label className="text-[11px] font-semibold text-slate-400 block mb-1.5 ml-1">Montant (€) *</label>
                             <input type="number" step="0.01" value={form.amount} onChange={e => setForm(f => ({...f, amount: e.target.value}))} className={IC} placeholder="0.00" />
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="text-[11px] font-black uppercase text-slate-400 block mb-1.5 ml-1">Fournisseur / Magasin</label>
+                            <label className="text-[11px] font-semibold text-slate-400 block mb-1.5 ml-1">Fournisseur / Magasin</label>
                             <input type="text" value={form.supplier} onChange={e => setForm(f => ({...f, supplier: e.target.value}))} className={IC} placeholder="CORA, Boulangerie..." />
                         </div>
                         <div>
-                            <label className="text-[11px] font-black uppercase text-slate-400 block mb-1.5 ml-1">Saisie par</label>
+                            <label className="text-[11px] font-semibold text-slate-400 block mb-1.5 ml-1">Saisie par</label>
                             <input type="text" value={form.by} onChange={e => setForm(f => ({...f, by: e.target.value}))} className={IC} placeholder="Prénom N." />
                         </div>
                     </div>
 
                     <div>
-                        <label className="text-[11px] font-black uppercase text-slate-400 block mb-1.5 ml-1">Description *</label>
+                        <label className="text-[11px] font-semibold text-slate-400 block mb-1.5 ml-1">Description *</label>
                         <input type="text" value={form.desc} onChange={e => setForm(f => ({...f, desc: e.target.value}))} className={IC} placeholder="Détail de la transaction..." />
                     </div>
 
                     <div>
-                        <label className="text-[11px] font-black uppercase text-slate-400 block mb-1.5 ml-1">Justificatif (Scan/PDF)</label>
+                        <label className="text-[11px] font-semibold text-slate-400 block mb-1.5 ml-1">Justificatif (Scan/PDF)</label>
                         <div 
                             className="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all group"
                             onClick={() => document.getElementById('receipt-upload')?.click()}
@@ -1066,7 +1066,7 @@ export const Debiteurs: React.FC = () => {
         </div>
         <table className="w-full text-left text-[13px]">
           <thead className="bg-slate-50/80 border-b border-slate-100"><tr>
-            {['Client', 'Facture', 'Canal', 'Montant', 'Échéance', 'Jours de retard', 'Statut', 'Actions'].map(h => <th key={h} className="px-4 py-3 text-[11px] font-black uppercase text-slate-400">{h}</th>)}
+            {['Client', 'Facture', 'Canal', 'Montant', 'Échéance', 'Jours de retard', 'Statut', 'Actions'].map(h => <th key={h} className="px-4 py-3 text-[11px] font-semibold text-slate-400">{h}</th>)}
           </tr></thead>
           <tbody className="divide-y divide-slate-50">
             {debs.map(d => (
@@ -1080,7 +1080,7 @@ export const Debiteurs: React.FC = () => {
                 <td className="px-4 py-3"><Badge label={d.status} color={statusColor[d.status]} /></td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1">
-                    <button onClick={() => { if (window.confirm(`Marquer ${d.client} comme réglé ?`)) setDebs(prev => prev.filter(dd => dd.id !== d.id)); }} className="text-[10px] font-bold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded-lg transition-colors">Réglé</button>
+                    <button onClick={() => { setDebs(prev => prev.filter(dd => dd.id !== d.id)); window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: `Débiteur soldé · ${d.client}` } })); }} className="text-[10px] font-bold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded-lg transition-colors">Réglé</button>
                     <button className="text-[10px] font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg transition-colors"><i className="fa-solid fa-paper-plane" /></button>
                   </div>
                 </td>
