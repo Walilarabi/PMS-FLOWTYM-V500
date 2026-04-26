@@ -741,6 +741,13 @@ export const Planning: React.FC<PlanningProps> = ({
               const d = new Date(baseDate);
               if (viewType === 'calendar') {
                 d.setMonth(d.getMonth() - 1);
+              } else if (viewDays >= 28) {
+                // Vue mois : aller au 1er du mois précédent
+                const prevMonth = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+                const daysInPrev = new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 0).getDate();
+                setViewDays(daysInPrev);
+                setBaseDate(prevMonth);
+                return;
               } else {
                 d.setDate(d.getDate() - viewDays);
               }
@@ -764,6 +771,13 @@ export const Planning: React.FC<PlanningProps> = ({
               const d = new Date(baseDate);
               if (viewType === 'calendar') {
                 d.setMonth(d.getMonth() + 1);
+              } else if (viewDays >= 28) {
+                // Vue mois : aller au 1er du mois suivant
+                const nextMonth = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+                const daysInNext = new Date(nextMonth.getFullYear(), nextMonth.getMonth() + 1, 0).getDate();
+                setViewDays(daysInNext);
+                setBaseDate(nextMonth);
+                return;
               } else {
                 d.setDate(d.getDate() + viewDays);
               }
@@ -1122,10 +1136,10 @@ export const Planning: React.FC<PlanningProps> = ({
                 return (
                   <th key={i} className={`px-1.5 py-1 text-center border-r border-slate-100 transition-colors bg-white ${isToday ? 'bg-amber-50/20' : isWeekend ? 'bg-blue-50/20' : ''}`} style={{ backgroundColor: isToday ? '#fffbeb' : isWeekend ? '#eff6ff' : '#ffffff', minWidth: viewDays >= 30 ? '44px' : viewDays >= 15 ? '64px' : '100px', maxWidth: viewDays >= 30 ? '80px' : undefined }}>
                     <div className="flex flex-col items-center justify-center gap-0.5">
-                       <span className={`font-black tracking-tight ${isToday ? 'text-amber-600' : isWeekend ? 'text-blue-500' : 'text-slate-400'} ${viewDays >= 30 ? 'text-[7px]' : 'text-[8px]'}`}>
+                       <span className={`font-bold tracking-tight ${isToday ? 'text-amber-600' : isWeekend ? 'text-blue-500' : 'text-slate-400'} ${viewDays >= 30 ? 'text-[9px]' : 'text-[10px]'}`}>
                           {DAYS_SHORT[d.getDay()]}
                        </span>
-                       <span className={`font-black leading-none ${isToday ? 'text-amber-700' : isWeekend ? 'text-blue-700' : 'text-slate-800'} ${viewDays >= 30 ? 'text-[9px]' : 'text-[10px]'}`}>
+                       <span className={`font-black leading-none ${isToday ? 'text-amber-700' : isWeekend ? 'text-blue-700' : 'text-slate-800'} ${viewDays >= 30 ? 'text-[11px]' : 'text-[13px]'}`}>
                           {d.getDate()}{viewDays < 30 ? ` ${MONTHS_SHORT[d.getMonth()]}` : ''}
                        </span>
                     </div>

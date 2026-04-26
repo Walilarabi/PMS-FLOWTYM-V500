@@ -350,7 +350,7 @@ export const ReservationDetailPanel: React.FC<ReservationDetailPanelProps> = ({
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
       <div className="bg-[#f8fafc] p-4 rounded-2xl border border-slate-100 space-y-2">
         <h4 className="text-[9px] font-black text-[#8B5CF6] uppercase tracking-widest border-b border-[#8B5CF6]/10 pb-1.5 mb-2">INFORMATIONS CLIENT</h4>
-        <p className="text-[12px] text-slate-700"><strong>${reservation.clientName}</strong><br/>${reservation.email}<br/>${reservation.phone}</p>
+        <p className="text-[12px] text-slate-700"><strong>{reservation.clientName}</strong><br/>{reservation.email}<br/>{reservation.phone}</p>
       </div>
 
       <div className="bg-[#f8fafc] p-4 rounded-2xl border border-slate-100">
@@ -358,10 +358,10 @@ export const ReservationDetailPanel: React.FC<ReservationDetailPanelProps> = ({
         <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-[11px]">
           <div><strong className="text-slate-400 text-[9px] uppercase">ARRIVÉE</strong><br/><span className="font-bold text-slate-700">2026-04-07</span></div>
           <div><strong className="text-slate-400 text-[9px] uppercase">DÉPART</strong><br/><span className="font-bold text-slate-700">2026-04-10</span></div>
-          <div><strong className="text-slate-400 text-[9px] uppercase">DURÉE</strong><br/><span className="font-bold text-slate-700">${reservation.nights} nuits</span></div>
+          <div><strong className="text-slate-400 text-[9px] uppercase">Durée</strong><br/><span className="font-bold text-slate-700">{reservation.nights} nuits</span></div>
           <div><strong className="text-slate-400 text-[9px] uppercase">PERSONNES</strong><br/><span className="font-bold text-slate-700">2 adultes</span></div>
-          <div><strong className="text-slate-400 text-[9px] uppercase">CATÉGORIE</strong><br/><span className="font-bold text-slate-700">${reservation.roomType}</span></div>
-          <div><strong className="text-slate-400 text-[9px] uppercase">CHAMBRE</strong><br/><span className="font-bold text-slate-700">${reservation.room}</span></div>
+          <div><strong className="text-slate-400 text-[9px] uppercase">Catégorie</strong><br/><span className="font-bold text-slate-700">{reservation.roomType}</span></div>
+          <div><strong className="text-slate-400 text-[9px] uppercase">Chambre</strong><br/><span className="font-bold text-slate-700">{reservation.room}</span></div>
           <div><strong className="text-slate-400 text-[9px] uppercase">PENSION</strong><br/><span className="font-bold text-slate-700">Room Only</span></div>
           <div><strong className="text-slate-400 text-[9px] uppercase">TARIF</strong><br/><span className="font-bold text-slate-700">Flexible</span></div>
         </div>

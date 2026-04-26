@@ -622,7 +622,7 @@ const ApercuView: React.FC<{
       <select
         value={period}
         onChange={(e) => setPeriod(e.target.value)}
-        className="text-[11px] font-black text-slate-700 bg-transparent outline-none cursor-pointer uppercase tracking-widest"
+        className="text-[11px] font-semibold text-slate-700 bg-transparent outline-none cursor-pointer"
       >
         <option>Aujourd'hui</option>
         <option>Cette semaine</option>
@@ -2590,32 +2590,54 @@ export const Rapports: React.FC<ReportProps> = ({
           <div className="flex bg-white p-1 rounded-2xl border border-slate-200 shadow-sm">
             <button
               onClick={() => setActiveTab("dashboard")}
-              className={`px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === "dashboard" ? "bg-primary text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
+              className={`px-6 py-2.5 rounded-xl text-[12px] font-semibold transition-all flex items-center gap-2 ${activeTab === "dashboard" ? "bg-primary text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
             >
               <LayoutDashboard className="w-4 h-4" /> Dashboard
             </button>
             <button
               onClick={() => setActiveTab("apercu")}
-              className={`px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === "apercu" ? "bg-primary text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
+              className={`px-6 py-2.5 rounded-xl text-[12px] font-semibold transition-all flex items-center gap-2 ${activeTab === "apercu" ? "bg-primary text-white shadow-lg" : "text-slate-400 hover:text-slate-600"}`}
             >
               <BarChart2 className="w-4 h-4" /> Apercu
             </button>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            {/* Bouton PDF */}
             <button
               onClick={handleExportPDF}
-              className="px-6 py-3 bg-[#FEF2F2] text-[#9F1239] border border-[#FECDD3] rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#FEE2E2] transition-all flex items-center gap-2.5 shadow-sm group active:scale-95"
+              title="Exporter en PDF"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] font-semibold transition-all hover:scale-[1.02] active:scale-95 shadow-sm"
+              style={{ background: '#FEF2F2', color: '#9F1239', border: '1px solid #FECDD3' }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#FEE2E2')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#FEF2F2')}
             >
-              <FileText className="w-4 h-4 group-hover:scale-110 transition-transform" />{" "}
-              PDF Export
+              {/* Icône PDF custom */}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9F1239" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <path d="M8 13h2.5a1.5 1.5 0 0 1 0 3H8v-3zm0 3v2"/>
+              </svg>
+              Export PDF
             </button>
+
+            {/* Bouton Excel */}
             <button
               onClick={handleExportExcel}
-              className="px-6 py-3 bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#DCFCE7] transition-all flex items-center gap-2.5 shadow-sm group active:scale-95"
+              title="Exporter en Excel (.xlsx)"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] font-semibold transition-all hover:scale-[1.02] active:scale-95 shadow-sm"
+              style={{ background: '#F0FDF4', color: '#166534', border: '1px solid #BBF7D0' }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#DCFCE7')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#F0FDF4')}
             >
-              <FileSpreadsheet className="w-4 h-4 group-hover:scale-110 transition-transform" />{" "}
-              Excel Export
+              {/* Icône Excel custom */}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#166534" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <path d="M8 13l2.5 4M13 13l-2.5 4"/>
+                <path d="M8 17h5"/>
+              </svg>
+              Export Excel
             </button>
           </div>
         </div>
