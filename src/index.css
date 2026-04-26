@@ -301,3 +301,24 @@ nav button:focus-visible {
 
 
 
+
+/* ═══════════════════════════════════════════════════════════════
+   PLANNING TABLE — Vue mois adaptative
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Vue mois : table-layout fixed activé via style inline React
+   Ce CSS assure la cohérence des cellules */
+.planning-body-scroll table[style*="table-layout: fixed"] td,
+.planning-body-scroll table[style*="table-layout: fixed"] th {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Responsive mobile : forcer scroll horizontal sur petits écrans */
+@media (max-width: 768px) {
+  .planning-body-scroll table[style*="table-layout: fixed"] {
+    table-layout: auto !important;
+    min-width: 900px !important;
+  }
+}

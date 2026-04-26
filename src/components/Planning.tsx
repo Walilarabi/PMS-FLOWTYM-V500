@@ -937,9 +937,13 @@ export const Planning: React.FC<PlanningProps> = ({
               <table 
                 className="w-full border-collapse transition-all duration-300 origin-top-left"
                 style={{ 
+                  tableLayout: viewDays >= 30 ? 'fixed' : 'auto',
+                  width: '100%',
                   minWidth: viewDays === 7
                     ? '100%'
-                    : `${Math.max(viewDays * 56, 800)}px`,
+                    : viewDays === 15
+                    ? `${Math.max(viewDays * 64, 800)}px`
+                    : '100%',
                   transform: `scale(${zoomLevel})`
                 }}
               >
@@ -1023,14 +1027,19 @@ export const Planning: React.FC<PlanningProps> = ({
                  return (
                    <td 
                      key={i} 
-                     className="px-0.5 py-0.5 border-r border-slate-100 min-h-[32px] min-w-[100px] relative cursor-pointer hover:bg-slate-50 transition-colors"
+                     className="px-0.5 py-0.5 border-r border-slate-100 min-h-[32px] relative cursor-pointer hover:bg-slate-50 transition-colors"
+                     style={{
+                       overflow: 'hidden',
+                       backgroundColor: isWeekend ? '#eff6ff' : '#ffffff',
+                       fontSize: '0.7rem',
+                       ...(viewDays < 30 ? { minWidth: '100px' } : {})
+                     }}
                      onMouseEnter={(e) => {
                        if (topEvent) {
                          setHoveredEvent({ event: topEvent, x: e.clientX, y: e.clientY });
                        }
                      }}
                      onMouseLeave={() => setHoveredEvent(null)}
-                     style={{ backgroundColor: isWeekend ? '#eff6ff' : '#ffffff', fontSize: '0.7rem' }}
                      onClick={() => {
                        if (dayEvents.length > 1) {
                          setEventOverlapSelection({ events: dayEvents, date: dateStr });
@@ -1070,7 +1079,8 @@ export const Planning: React.FC<PlanningProps> = ({
             </tr>
 
             <tr className="bg-white border-b border-slate-200 sticky top-[139px] z-30 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)]">
-              <th className="sticky left-0 z-40 bg-white border-r border-slate-100 px-4 py-2 text-left min-w-[140px] align-middle">
+              <th className="sticky left-0 z-40 bg-white border-r border-slate-100 px-4 py-2 text-left align-middle"
+                style={{ width: viewDays >= 30 ? '130px' : '140px', minWidth: viewDays >= 30 ? '130px' : '140px' }}>
                  <div className="relative">
                    <div 
                      onClick={() => setIsFloorDropdownOpen(!isFloorDropdownOpen)}
@@ -1121,7 +1131,12 @@ export const Planning: React.FC<PlanningProps> = ({
                 const isToday = formatDate(d) === TODAY;
                 const isWeekend = d.getDay() === 0 || d.getDay() === 6;
                 return (
-                  <th key={i} className={`px-1.5 py-1 text-center border-r border-slate-100 transition-colors bg-white ${isToday ? 'bg-amber-50/20' : isWeekend ? 'bg-blue-50/20' : ''}`} style={{ backgroundColor: isToday ? '#fffbeb' : isWeekend ? '#eff6ff' : '#ffffff', minWidth: viewDays >= 30 ? '44px' : viewDays >= 15 ? '64px' : '100px', maxWidth: viewDays >= 30 ? '80px' : undefined }}>
+                  <th key={i} className={`px-1.5 py-1 text-center border-r border-slate-100 transition-colors bg-white ${isToday ? 'bg-amber-50/20' : isWeekend ? 'bg-blue-50/20' : ''}`}
+                    style={{
+                      backgroundColor: isToday ? '#fffbeb' : isWeekend ? '#eff6ff' : '#ffffff',
+                      ...(viewDays < 30 ? { minWidth: viewDays >= 15 ? '64px' : '100px' } : {}),
+                      overflow: 'hidden',
+                    }}>
                     <div className="flex flex-col items-center justify-center gap-0.5">
                        <span className={`font-bold tracking-tight ${isToday ? 'text-amber-600' : isWeekend ? 'text-blue-500' : 'text-slate-400'} ${viewDays >= 30 ? 'text-[9px]' : 'text-[10px]'}`}>
                           {DAYS_SHORT[d.getDay()]}

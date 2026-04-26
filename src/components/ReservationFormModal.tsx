@@ -569,14 +569,50 @@ const ReservationFormModal: React.FC<Props> = ({
                     <Ico d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 9, fontWeight: 700, color: '#8B5CF6', textTransform: 'uppercase', letterSpacing: 1 }}>Arrivée</div>
-                      <input style={inp} type="date" value={form.checkIn} onChange={e => set('checkIn', e.target.value)} />
+                      <input
+                        style={inp}
+                        type="date"
+                        value={form.checkIn}
+                        min={todayISO()}
+                        onChange={e => {
+                          const val = e.target.value;
+                          if (val < todayISO()) {
+                            window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Date invalide · L\'arrivée ne peut pas être dans le passé' } }));
+                            set('checkIn', todayISO());
+                            return;
+                          }
+                          set('checkIn', val);
+                          // Si départ < nouvelle arrivée → ajuster départ
+                          if (form.checkOut && form.checkOut <= val) {
+                            const next = new Date(val);
+                            next.setDate(next.getDate() + 1);
+                            set('checkOut', next.toISOString().split('T')[0]);
+                          }
+                        }}
+                      />
                     </div>
                   </div>
                   <div style={Fst('checkOut')} {...foc('checkOut')}>
                     <Ico d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 16l2 2 4-4" />
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 9, fontWeight: 700, color: '#8B5CF6', textTransform: 'uppercase', letterSpacing: 1 }}>Départ</div>
-                      <input style={inp} type="date" value={form.checkOut} onChange={e => set('checkOut', e.target.value)} />
+                      <input
+                        style={inp}
+                        type="date"
+                        value={form.checkOut}
+                        min={form.checkIn || todayISO()}
+                        onChange={e => {
+                          const val = e.target.value;
+                          if (val <= form.checkIn) {
+                            window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'Date invalide · Le départ doit être après l\'arrivée' } }));
+                            const next = new Date(form.checkIn);
+                            next.setDate(next.getDate() + 1);
+                            set('checkOut', next.toISOString().split('T')[0]);
+                            return;
+                          }
+                          set('checkOut', val);
+                        }}
+                      />
                     </div>
                   </div>
                   <Sel icon={<Ico d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zM2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />}
