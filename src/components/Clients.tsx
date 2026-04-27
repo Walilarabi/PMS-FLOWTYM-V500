@@ -509,10 +509,12 @@ export const Clients: React.FC<ClientsProps> = ({ clients, onUpdateClient, onAdd
                         onChange={e => setEditForm({...editForm, tag: e.target.value})}
                       >
                          <option value="">— Aucun —</option>
-                         <option value="VIP">👑 VIP</option>
-                         <option value="Affaires">💼 Affaires</option>
-                         <option value="Famille">👨‍👩‍👧 Famille</option>
-                         <option value="Regulier">⭐ Régulier</option>
+                         <option value="VIP">★ VIP</option>
+                         <option value="Affaires">⊞ Affaires</option>
+                         <option value="Famille">⌂ Famille</option>
+                         <option value="Regulier">◈ Régulier</option>
+                         <option value="Loisir">◎ Loisir</option>
+                         <option value="Groupe">⊕ Groupe</option>
                       </select>
                     </div>
                     <div className="col-span-3 space-y-1.5">

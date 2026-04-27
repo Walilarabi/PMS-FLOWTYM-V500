@@ -84,16 +84,16 @@ const COUNTRY_DIAL: Record<string, string> = {
   IN: '+91', BR: '+55', MX: '+52', AU: '+61', RU: '+7',
 };
 
-// Segments client
+// Segments client — icônes SVG modernes épurées
 const SEGMENTS = [
-  { value: 'Loisir',    icon: '🌴', label: 'Loisir' },
-  { value: 'Business',  icon: '💼', label: 'Business' },
-  { value: 'Corpo',     icon: '🏢', label: 'Corpo' },
-  { value: 'Groupe',    icon: '👥', label: 'Groupe' },
-  { value: 'Agence',    icon: '🏛️', label: 'Agence' },
-  { value: 'TO',        icon: '✈️', label: 'Tour Opérator' },
-  { value: 'Famille',   icon: '👨‍👩‍👧', label: 'Famille' },
-  { value: 'VIP',       icon: '👑', label: 'VIP' },
+  { value: 'Loisir',   icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>, label: 'Loisir' },
+  { value: 'Business', icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>, label: 'Business' },
+  { value: 'Corpo',    icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, label: 'Corpo' },
+  { value: 'Groupe',   icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, label: 'Groupe' },
+  { value: 'Agence',   icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>, label: 'Agence' },
+  { value: 'TO',       icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 10a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91"/></svg>, label: 'Tour Opérator' },
+  { value: 'Famille',  icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>, label: 'Famille' },
+  { value: 'VIP',      icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>, label: 'VIP' },
 ];
 
 const RATE_PLANS = [
@@ -784,7 +784,25 @@ const ReservationFormModal: React.FC<Props> = ({
                     <div style={{ border: '2px dashed #DDD6FE', borderRadius: 14, padding: '16px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, background: '#F5F3FF' }}>
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" strokeWidth="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
                       <span style={{ fontSize: 11.5, color: '#A78BFA', fontWeight: 500, textAlign: 'center', lineHeight: 1.4 }}>Glissez vos fichiers ici<br/><span style={{ fontSize: 10, opacity: .7 }}>PDF · Image · HTML</span></span>
-                      <button style={{ padding: '5px 13px', borderRadius: 8, border: '1.5px solid #DDD6FE', background: '#fff', fontFamily: 'Inter,sans-serif', fontSize: 11, fontWeight: 600, color: '#8B5CF6', cursor: 'pointer' }}>Parcourir</button>
+                      <input
+                        id="file-browse-input"
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png,.html"
+                        multiple
+                        style={{ display: 'none' }}
+                        onChange={e => {
+                          const files = Array.from(e.target.files || []) as File[];
+                          if (files.length > 0) {
+                            window.dispatchEvent(new CustomEvent('app-toast', {
+                              detail: { message: `${files.length} fichier(s) ajouté(s) · ${files.map((f: File) => f.name).join(', ')}` }
+                            }));
+                          }
+                        }}
+                      />
+                      <button
+                        onClick={() => document.getElementById('file-browse-input')?.click()}
+                        style={{ padding: '5px 13px', borderRadius: 8, border: '1.5px solid #DDD6FE', background: '#fff', fontFamily: 'Inter,sans-serif', fontSize: 11, fontWeight: 600, color: '#8B5CF6', cursor: 'pointer' }}
+                      >Parcourir</button>
                     </div>
                   </div>
                 </div>
@@ -793,17 +811,19 @@ const ReservationFormModal: React.FC<Props> = ({
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 0 }}>
                   <Sel
                     icon={
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" strokeWidth="1.8">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-                      </svg>
+                      SEGMENTS.find(s => s.value === form.segment)?.icon || (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" strokeWidth="1.8">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                      )
                     }
                     value={form.segment}
                     onChange={v => set('segment', v)}
                     placeholder="Segment client"
                   >
                     {SEGMENTS.map(s => (
-                      <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
+                      <option key={s.value} value={s.value}>{s.label}</option>
                     ))}
                   </Sel>
                 </div>
