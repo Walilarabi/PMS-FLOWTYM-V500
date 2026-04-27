@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { RMSTableau } from './RMSTableau';
+import { LittleYielder } from './LittleYielder';
 import { 
   Tags, 
   RefreshCw, 
@@ -299,13 +300,14 @@ export const Tarifs: React.FC = () => {
       {/* ─── TABS ─── */}
       <div className="flex gap-1 bg-slate-100 p-1.5 rounded-2xl w-fit">
         {[
-          { id: 'rateplans', label: 'Rate Plans', icon: Tags },
-          { id: 'grid', label: 'Grille tarifaire', icon: LayoutGrid },
-          { id: 'restr', label: 'Restrictions', icon: Lock },
-          { id: 'rms', label: 'Tableau RMS', icon: Zap },
-          { id: 'mapping', label: 'Mapping Rooms', icon: LinkIcon },
-          { id: 'sync', label: 'Synchronisation', icon: RefreshCw },
-          { id: 'mass', label: 'Masse + Logs', icon: Zap },
+          { id: 'rateplans', label: 'Rate Plans',      icon: Tags },
+          { id: 'grid',      label: 'Grille tarifaire', icon: LayoutGrid },
+          { id: 'restr',     label: 'Restrictions',     icon: Lock },
+          { id: 'yielder',   label: 'Little Yielder',   icon: Zap },
+          { id: 'rms',       label: 'Tableau RMS',      icon: Zap },
+          { id: 'mapping',   label: 'Mapping Rooms',    icon: LinkIcon },
+          { id: 'sync',      label: 'Synchronisation',  icon: RefreshCw },
+          { id: 'mass',      label: 'Masse + Logs',     icon: Zap },
         ].map(t => {
           const Icon = t.icon;
           return (
@@ -624,6 +626,15 @@ export const Tarifs: React.FC = () => {
                    <ArrowUp className="w-4 h-4" /> Synchroniser tout
                 </button>
              </div>
+          </motion.div>
+        )}
+
+        {/* ─── TAB: LITTLE YIELDER ─── */}
+        {activeTab === 'yielder' && (
+          <motion.div
+            key="yielder" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+          >
+            <LittleYielder />
           </motion.div>
         )}
 
