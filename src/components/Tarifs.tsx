@@ -243,39 +243,57 @@ export const Tarifs: React.FC = () => {
     <div className="space-y-6 pb-20">
       {/* ─── HEADER supprimé (Point 4) ─── */}
 
-      {/* ─── HUD ─── */}
-      <div className="grid grid-cols-6 gap-4">
-        {[
-          { l: 'Rate Plans actifs', v: ratePlans.length, d: 'sur 40 config.', c: '#8B5CF6' },
-          { l: 'Mappés D-Edge', v: '38', d: '✓ 95% mappés', c: '#10b981' },
-          { l: 'Room Types', v: roomTypes.length, d: 'DBL · SU · ADJ', c: '#3b82f6' },
-          { l: 'En attente sync', v: pendingPush.length, d: '⚠ À pousser', c: '#f59e0b' },
-          { l: 'Dernière sync', v: '12h04', d: '✓ Succès', c: '#10b981' },
-        ].map((k, i) => (
-          <div key={i} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden group">
-            <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: k.c }} />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">{k.l}</span>
-            <div className="text-xl font-black text-slate-800 mt-1">
-              {kpiVisible ? k.v : '••••'}
-            </div>
-            <div className="text-[9px] font-bold text-slate-300 mt-1 uppercase tracking-widest">{k.d}</div>
-          </div>
-        ))}
-        {/* Bouton masque KPI */}
-        <button
-          onClick={() => setKpiVisible(v => !v)}
-          className="flex flex-col items-center justify-center gap-2 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-primary/30 hover:bg-violet-50 transition-all group cursor-pointer p-5"
-          title={kpiVisible ? 'Masquer les KPIs' : 'Afficher les KPIs'}
-        >
-          {kpiVisible ? (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" strokeWidth="1.8" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          ) : (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="1.8" strokeLinecap="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-          )}
-          <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: kpiVisible ? '#8B5CF6' : '#94A3B8' }}>
-            {kpiVisible ? 'Masquer' : 'Afficher'}
+      {/* ─── HUD + bouton masque ─── */}
+      <div>
+        {/* Barre de contrôle */}
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            Indicateurs clés
           </span>
-        </button>
+          <button
+            onClick={() => setKpiVisible(v => !v)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all text-[10px] font-semibold"
+            style={{
+              background: kpiVisible ? 'white' : '#F5F3FF',
+              borderColor: kpiVisible ? '#E2E8F0' : '#DDD6FE',
+              color: kpiVisible ? '#94A3B8' : '#7C3AED',
+            }}
+          >
+            {kpiVisible ? (
+              <>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                Masquer
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="18 15 12 9 6 15"/></svg>
+              </>
+            ) : (
+              <>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                Afficher
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Cartes KPI — masquées entièrement quand kpiVisible=false */}
+        {kpiVisible && (
+          <div className="grid grid-cols-5 gap-4">
+            {[
+              { l: 'Rate Plans actifs', v: ratePlans.length, d: 'sur 40 config.', c: '#8B5CF6' },
+              { l: 'Mappés D-Edge', v: '38', d: '✓ 95% mappés', c: '#10b981' },
+              { l: 'Room Types', v: roomTypes.length, d: 'DBL · SU · ADJ', c: '#3b82f6' },
+              { l: 'En attente sync', v: pendingPush.length, d: '⚠ À pousser', c: '#f59e0b' },
+              { l: 'Dernière sync', v: '12h04', d: '✓ Succès', c: '#10b981' },
+            ].map((k, i) => (
+              <div key={i} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden group">
+                <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: k.c }} />
+                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">{k.l}</span>
+                <div className="text-xl font-black text-slate-800 mt-1">{k.v}</div>
+                <div className="text-[9px] font-bold text-slate-300 mt-1 uppercase tracking-widest">{k.d}</div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ─── TABS ─── */}
