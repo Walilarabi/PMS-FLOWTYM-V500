@@ -33,6 +33,7 @@ import { Reservations } from './components/Reservations';
 import { Clients } from './components/Clients';
 import { Checkin } from './components/Checkin';
 import { Simulations } from './components/Simulations';
+import { Facturation } from './components/Facturation';
 import { Rapports } from './components/Rapports';
 import { Tarifs } from './components/Tarifs';
 import { Groups } from './components/Groups';
@@ -836,9 +837,10 @@ export default function App() {
     {
       id: 'finance', label: 'Finance', icon: 'fa-euro-sign', color: '#EF4444',
       tabs: [
-        { id: 'cloture',       label: 'Clôture',       icon: 'fa-lock'         },
-        { id: 'finance_caisse',label: 'Caisse',         icon: 'fa-cash-register'},
-        { id: 'finance_debt',  label: 'Impayés',        icon: 'fa-exclamation-circle' },
+        { id: 'facturation',   label: 'Facturation',    icon: 'fa-file-invoice'      },
+        { id: 'cloture',       label: 'Clôture',        icon: 'fa-lock'              },
+        { id: 'finance_caisse',label: 'Caisse',         icon: 'fa-cash-register'     },
+        { id: 'finance_debt',  label: 'Impayés',        icon: 'fa-exclamation-circle'},
       ]
     },
     {
@@ -1016,6 +1018,13 @@ export default function App() {
               <>
                 <ModuleHeader label="Tableau RMS — Pricing Engine" icon="fa-table" />
                 <Tarifs />
+              </>
+            );
+          case 'facturation':
+            return (
+              <>
+                <ModuleHeader label="Facturation" icon="fa-file-invoice" />
+                <Facturation />
               </>
             );
           case 'cloture':
