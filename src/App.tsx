@@ -101,6 +101,39 @@ const toast = (msg: string) => {
 // ==================== MOCK DATA ====================
 const TODAY = new Date().toISOString().slice(0, 10);
 
+// Codes autorisés — Typologie : DBL Double | TWN Twin | STE Suite | FAM Familiale | TPL Triple | SGL Single
+// Codes autorisés — Catégorie : CL Classique | DLX Deluxe | SP Supérieure | EX Executive | PR Prestige
+const ROOM_TYPOLOGY_CODES: Record<string, string> = {
+  'Double': 'DBL', 'Twin': 'TWN', 'Suite': 'STE',
+  'Familiale': 'FAM', 'Triple': 'TPL', 'Single': 'SGL',
+};
+const ROOM_CATEGORY_BY_NUM: Record<string, string> = {
+  // Étage 1 — Double + Suite
+  '101': 'CL',  '102': 'CL',  '103': 'DLX', '104': 'DLX', '105': 'CL',
+  '106': 'SP',  '107': 'CL',  '108': 'DLX', '109': 'CL',  '110': 'DLX',
+  '111': 'SP',  '112': 'PR',
+  // Étage 2 — Twin + Suite
+  '201': 'CL',  '202': 'DLX', '203': 'CL',  '204': 'DLX', '205': 'SP',
+  '206': 'PR',  '207': 'CL',  '208': 'DLX', '209': 'CL',  '210': 'SP',
+  '211': 'DLX', '212': 'PR',
+  // Étage 3 — Single
+  '301': 'CL',  '302': 'CL',  '303': 'DLX', '304': 'CL',  '305': 'CL',
+  '306': 'DLX', '307': 'CL',  '308': 'SP',  '309': 'CL',  '310': 'DLX',
+  '311': 'CL',  '312': 'SP',
+  // Étage 4 — Double
+  '401': 'DLX', '402': 'SP',  '403': 'DLX', '404': 'EX',  '405': 'DLX',
+  '406': 'EX',  '407': 'SP',  '408': 'DLX', '409': 'EX',  '410': 'DLX',
+  '411': 'EX',  '412': 'PR',
+  // Étage 5 — Suite
+  '501': 'SP',  '502': 'SP',  '503': 'EX',  '504': 'EX',  '505': 'PR',
+  '506': 'PR',  '507': 'EX',  '508': 'PR',  '509': 'EX',  '510': 'PR',
+};
+const getRoomCode = (num: string, type: string): string => {
+  const typCode = ROOM_TYPOLOGY_CODES[type] || type.slice(0, 3).toUpperCase();
+  const catCode = ROOM_CATEGORY_BY_NUM[num] || 'CL';
+  return `${typCode}/${catCode}`;
+};
+
 const INITIAL_ROOMS = [
   // Étage 1
   ...Array.from({ length: 12 }, (_, i) => ({ num: (101 + i).toString(), type: i % 3 === 0 ? "Suite" : "Double", price: i % 3 === 0 ? 250 : 120, status: "available", floor: 1 })),

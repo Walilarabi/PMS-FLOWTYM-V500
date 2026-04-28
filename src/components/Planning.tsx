@@ -1198,6 +1198,20 @@ export const Planning: React.FC<PlanningProps> = ({
                   <div className="flex items-center justify-between mb-1">
                     <div className="font-black text-slate-800 text-[11px] leading-tight flex items-center gap-1.5">
                       Ch. {room.num}
+                      {/* Code typologie/catégorie — enrichissement uniquement, design inchangé */}
+                      <span className="text-[8px] font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-md tracking-wide leading-none">
+                        {(() => {
+                          const TYPO: Record<string, string> = { 'Double': 'DBL', 'Twin': 'TWN', 'Suite': 'STE', 'Familiale': 'FAM', 'Triple': 'TPL', 'Single': 'SGL' };
+                          const CAT: Record<string, string> = {
+                            '101':'CL','102':'CL','103':'DLX','104':'DLX','105':'CL','106':'SP','107':'CL','108':'DLX','109':'CL','110':'DLX','111':'SP','112':'PR',
+                            '201':'CL','202':'DLX','203':'CL','204':'DLX','205':'SP','206':'PR','207':'CL','208':'DLX','209':'CL','210':'SP','211':'DLX','212':'PR',
+                            '301':'CL','302':'CL','303':'DLX','304':'CL','305':'CL','306':'DLX','307':'CL','308':'SP','309':'CL','310':'DLX','311':'CL','312':'SP',
+                            '401':'DLX','402':'SP','403':'DLX','404':'EX','405':'DLX','406':'EX','407':'SP','408':'DLX','409':'EX','410':'DLX','411':'EX','412':'PR',
+                            '501':'SP','502':'SP','503':'EX','504':'EX','505':'PR','506':'PR','507':'EX','508':'PR','509':'EX','510':'PR',
+                          };
+                          return `${TYPO[room.type] || room.type.slice(0,3).toUpperCase()}/${CAT[room.num] || 'CL'}`;
+                        })()}
+                      </span>
                     </div>
                     <div 
                       className="w-2 h-2 rounded-full border border-white shadow-sm" 
