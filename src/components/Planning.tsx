@@ -114,6 +114,44 @@ const CATEGORY_LEVELS: Record<string, number> = {
 
 const getCategoryLevel = (category: string) => CATEGORY_LEVELS[category] || 0;
 
+const TYPOLOGY_CODES: Record<string, string> = {
+  'double': 'DBL',
+  'twin': 'TWN',
+  'suite': 'STE',
+  'familiale': 'FAM',
+  'triple': 'TPL',
+  'single': 'SGL',
+  'simple': 'SGL'
+};
+
+const CATEGORY_CODES: Record<string, string> = {
+  'classique': 'CL',
+  'deluxe': 'DLX',
+  'supérieure': 'SP',
+  'superieure': 'SP',
+  'executive': 'EX',
+  'prestige': 'PR'
+};
+
+const getRoomCode = (room: any) => {
+  const roomType = (room?.type || '').toString().trim();
+  const roomCategory = (room?.category || '').toString().trim();
+  const normalizedType = roomType.toLowerCase();
+  const normalizedCategory = roomCategory.toLowerCase();
+
+  const matchedTypology =
+    Object.keys(TYPOLOGY_CODES).find((key) => normalizedType.includes(key)) || '';
+  const matchedCategory =
+    Object.keys(CATEGORY_CODES).find((key) => normalizedCategory.includes(key)) ||
+    Object.keys(CATEGORY_CODES).find((key) => normalizedType.includes(key)) ||
+    'classique';
+
+  const typologyCode = TYPOLOGY_CODES[matchedTypology] || roomType.slice(0, 3).toUpperCase() || 'UNK';
+  const categoryCode = CATEGORY_CODES[matchedCategory] || 'CL';
+
+  return `${typologyCode}/${categoryCode}`;
+};
+
 const RATE_PLANS = [
   { partenaire: "Booking.com", typeChambre: "Double", pension: "RO", annulation: "flexible", prix: 99, plan: "RACK-RO-FLEX" },
   { partenaire: "Booking.com", typeChambre: "Double", pension: "RO", annulation: "non_remboursable", prix: 89, plan: "RACK-RO-NANR" },
@@ -1196,8 +1234,9 @@ export const Planning: React.FC<PlanningProps> = ({
               <tr key={room.num} className={`group ${idx % 2 === 1 ? 'bg-slate-50/50' : 'bg-white'} hover:bg-slate-50/20`}>
                 <td className={`sticky left-0 z-10 bg-inherit border-r border-slate-200 px-4 ${idx === 0 ? 'pt-2 pb-1' : 'py-1'} group-hover:bg-slate-50/50 transition-colors`}>
                   <div className="flex items-center justify-between mb-1">
-                    <div className="font-black text-slate-800 text-[11px] leading-tight flex items-center gap-1.5">
-                      Ch. {room.num}
+                    <div className="room-cell font-black text-slate-800 text-[11px] leading-tight flex flex-col items-center justify-center">
+                      <span className="room-number">{room.num}</span>
+                      <span className="room-code text-[0.65rem] text-slate-500">{getRoomCode(room)}</span>
                     </div>
                     <div 
                       className="w-2 h-2 rounded-full border border-white shadow-sm" 
