@@ -40,6 +40,7 @@ import { SourceLogo } from './SourceLogo';
 import { Flowboard } from './Flowboard';
 import { CheckinQR } from './CheckinQR';
 import ReservationFormModal from './ReservationFormModal';
+import { FicheReservation } from './FicheReservation';
 
 interface Reservation {
   id: string;
@@ -156,6 +157,7 @@ export const Reservations: React.FC<ReservationsProps> = ({
   const [showLogsResaId, setShowLogsResaId] = useState<string | null>(null);
   const [isNewResModalOpen, setIsNewResModalOpen] = useState(false);
   const [selectedResaIdForAction, setSelectedResaIdForAction] = useState<string | null>(null);
+  const [ficheResaId, setFicheResaId] = useState<string | null>(null);
 
   // ── Modale relance paiement ──
   const [reminderModal, setReminderModal] = useState<{ resa: Reservation; clientName: string } | null>(null);
@@ -988,6 +990,14 @@ export const Reservations: React.FC<ReservationsProps> = ({
                         {/* Actions */}
                         <td className="px-3 py-1.5 no-print" onClick={e => e.stopPropagation()}>
                           <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            {/* Bouton Fiche complète */}
+                            <button
+                              onClick={() => setFicheResaId(r.id)}
+                              className="w-6 h-6 flex items-center justify-center rounded-lg bg-violet-100 text-violet-700 hover:bg-violet-600 hover:text-white transition-all shadow-sm"
+                              title="Ouvrir la fiche réservation"
+                            >
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            </button>
                             <button
                               onClick={() => handlePrintSingle(r)}
                               className="w-6 h-6 flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-slate-900 hover:text-white transition-all shadow-sm"
@@ -1452,6 +1462,22 @@ export const Reservations: React.FC<ReservationsProps> = ({
           setIsNewResModalOpen(false);
         }}
       />
+
+      {/* ── FICHE RÉSERVATION COMPLÈTE ── */}
+      <AnimatePresence>
+        {ficheResaId && (() => {
+          const ficheResa = initialReservations.find(r => r.id === ficheResaId);
+          if (!ficheResa) return null;
+          return (
+            <FicheReservation
+              key={ficheResaId}
+              reservation={ficheResa}
+              allReservations={initialReservations}
+              onClose={() => setFicheResaId(null)}
+            />
+          );
+        })()}
+      </AnimatePresence>
     </div>
   );
 };
